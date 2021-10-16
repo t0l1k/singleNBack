@@ -37,12 +37,34 @@ class GameLogic:
         conf.maxMoves = conf.moves*level+level+1
         return conf.maxMoves
 
-    def keyPress(self):
+    def keyPressed(self):
         self.pressed = True
         self.bgColor = conf.blue
 
     def checkLastMove(self):
-        pass
+        if len(self.moves) > self.level:  # есть что анализировать на правильный ход
+            print(
+                "nBack"+str(self.level),
+                "ход:", conf.maxMoves-self.move,
+                self.moves[len(self.moves)-self.level-1:len(self.moves)],
+                self.board.lastActiveCellNr,
+                self.moves[len(self.moves)-1-self.level])
+            # есть повтор n-шагов назад
+            if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
+                print("Есть повтор", str(self.level), "шага назад", end=" ")
+                if self.pressed:  # правильный ответ
+                    self.bgColor = conf.green
+                    print("правильный ответ.")
+                else:  # пропустили правильный ответ
+                    self.bgColor = conf.red
+                    print("Пропустили повтор.")
+            elif self.pressed:  # определен повтор неправильно
+                self.bgColor = conf.orange
+                print("Не было повтора")
+        elif self.pressed:  # еще не могло быть повтора
+            self.bgColor = conf.orange
+            self.msg = "ещё рановато для повтора"
+        self.pressed = False
 
     def update(self):
         self.gameTimer = self.getTick()-self.sessionTimer
