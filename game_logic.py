@@ -62,8 +62,32 @@ class GameLogic:
                     self.move = 0
                     self.board.cellOff()
                     self.inGame = False
+                    self.board.lblPauseNextLevel.visible = True
+                    self.board.lblPauseTimer.visible = True
+                    self.pauseTimer = self.getTick()
+                    self.pauseTime = conf.timePause * \
+                        1000*(conf.lives+1-self.lives)
         else:
-            pass
+            if self.getTick()-self.pauseTimer > self.pauseTime:  # пауза закончилась
+                self.board.lblPauseNextLevel.visible = False
+                self.board.lblPauseTimer.visible = False
+                self.lives -= 1
+                if not self.resetLevel:
+                    self.level += 1
+                    self.lives = conf.lives
+                elif self.lives == 0 and self.level > 1:
+                    self.level -= 1
+                    self.lives = conf.lives
+                elif self.level == 1:
+                    self.lives = conf.lives
+                self.move = self.setLevelMoveCount(self.level)
+                self.moves = []
+                self.inGame = True
+                self.resetLevel = False
+                self.pressed = False
+            else:
+                self.msgTimer = str(
+                    self.pauseTime//1000-(self.getTick()-self.pauseTimer)//1000)
         self.setLabels()
 
     def setLabels(self):
