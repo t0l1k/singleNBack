@@ -1,4 +1,4 @@
-beginLevel = 3
+beginLevel = 1
 lives = 5
 moves = 5
 maxMoves = 0
@@ -6,8 +6,8 @@ maxMoves = 0
 w, h = 0, 0
 isFullScreen = False
 
-timeToNextCell = 3000
-timeShowCell = 1500
+timeToNextCell = 2000
+timeShowCell = 1000
 timePause = 5
 
 bgColor = [192, 192, 192]
