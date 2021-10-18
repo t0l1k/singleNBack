@@ -1,5 +1,6 @@
 import pygame
 import conf
+import datetime
 from board import Board
 
 
@@ -17,7 +18,6 @@ class GameLogic:
 
     def start(self):
         self.inGame = True
-        self.resetLevel = False
         self.sessionTimer = self.getTick()
         self.move = self.setLevelMoveCount(self.level)
         self.lives = conf.lives
@@ -28,6 +28,13 @@ class GameLogic:
         self.resetNewCellTimer()
         self.board.setNewActiveCell()
         self.board.cellOff()
+        self.countCorrect = 0
+        self.countWrong = 0
+        self.gameAverage = 0
+        self.gameCount = 0
+        self.games = {}
+        self.max = conf.beginLevel
+        self.lastTimeToNextCellCheck = self.getTick()
 
     def resetNewCellTimer(self):
         self.beginNewCell = self.getTick()-self.delayBeforeShow
@@ -44,73 +51,104 @@ class GameLogic:
     def checkLastMove(self):
         if len(self.moves) > self.level:  # есть что анализировать на правильный ход
             print(
-                "nBack"+str(self.level),
+                "#"+str(self.gameCount),
+                "nB"+str(self.level),
                 "ход:", conf.maxMoves-self.move,
                 self.moves[len(self.moves)-self.level-1:len(self.moves)],
                 self.board.lastActiveCellNr,
                 self.moves[len(self.moves)-1-self.level])
             # есть повтор n-шагов назад
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
-                print("Есть повтор", str(self.level), "шага назад", end=" ")
                 if self.pressed:  # правильный ответ
+                    self.countCorrect += 1
                     self.bgColor = conf.green
-                    print("правильный ответ.")
                 else:  # пропустили правильный ответ
+                    self.countWrong += 1
                     self.bgColor = conf.red
-                    print("Пропустили повтор.")
             elif self.pressed:  # определен повтор неправильно
+                self.countWrong += 1
                 self.bgColor = conf.orange
-                print("Не было повтора")
         elif self.pressed:  # еще не могло быть повтора
+            self.countWrong += 1
             self.bgColor = conf.orange
-            self.msg = "ещё рановато для повтора"
         self.pressed = False
 
     def update(self):
         self.gameTimer = self.getTick()-self.sessionTimer
         if self.inGame:
-            if self.getTick()-self.beginNewCell > self.timeToNextCell:  # показать новую клетку
+            if self.getTick()-self.lastTimeToNextCellCheck > self.timeToNextCell:  # показать новую клетку
                 self.move -= 1
                 self.moves.append(self.board.activeCellNr)
                 self.board.cellOff()
                 self.resetNewCellTimer()
                 self.board.setNewActiveCell()
                 self.bgColor = conf.bgColor
+                self.lastTimeToNextCellCheck = self.getTick()
+
             if self.getTick()-self.beginNewCell < self.timeToNextCell:  # во время показа новой иконки
                 if self.getTick() > self.delayBeforeShow+self.delayEnd and not self.board.isCellActive():  # время показать новую иконку
                     self.checkLastMove()
                     self.board.cellOn()
-                if self.move < 1:
-                    self.move = 0
-                    self.board.cellOff()
-                    self.inGame = False
-                    self.board.lblPauseNextLevel.visible = True
-                    self.board.lblPauseTimer.visible = True
-                    self.pauseTimer = self.getTick()
-                    self.pauseTime = conf.timePause * \
-                        1000*(conf.lives+1-self.lives)
+                    if self.move < 1:  # переход на следующий уровень
+                        self.gameCount += 1
+                        self.pauseTimer = self.getTick()
+                        self.move = 0
+                        self.board.cellOff()
+                        self.inGame = False
+                        self.pauseTime = conf.timePause * 1000*(
+                            conf.lives+1-self.lives)
+                        self.levelResult = self.getLevelResultPercent(
+                            self.countCorrect, self.countWrong)  # результат уровня в процентах
+                        self.games[self.gameCount] = [
+                            self.level, self.levelResult, datetime.datetime.now().strftime('%Y%m%d%H%M%S')]
+                        self.gameAverage = self.getTodayAverage()
+                        s = "#{} nBack{} правильных:{} ошибок:{} процент:{} max:{} Av:{}".format(
+                            self.gameCount, self.level, self.countCorrect, self.countWrong, self.levelResult, self.max, round(self.gameAverage, 1))
+                        self.msg = s
+                        print(s)
+                        if self.levelResult >= conf.nextLevelPercent:  # переход на следующий уровень
+                            self.level += 1
+                            self.lives = conf.lives
+                        elif self.levelResult < conf.dropLevelPercent:  # переход на уровень ниже
+                            self.lives -= 1
+                            if self.lives == 0:
+                                self.level -= 1
+                                self.lives = conf.lives
+                            if self.level <= 1:
+                                self.lives = conf.lives
+                        if self.max < self.level:
+                            self.max = self.level
+                        self.countCorrect = 0
+                        self.countWrong = 0
+                        self.move = self.setLevelMoveCount(self.level)
+                        self.moves = []
+                        self.board.lblPauseNextLevel.visible = True
+                        self.board.lblPauseTimer.visible = True
         else:
             if self.getTick()-self.pauseTimer > self.pauseTime:  # пауза закончилась
                 self.board.lblPauseNextLevel.visible = False
                 self.board.lblPauseTimer.visible = False
-                self.lives -= 1
-                if not self.resetLevel:
-                    self.level += 1
-                    self.lives = conf.lives
-                elif self.lives == 0 and self.level > 1:
-                    self.level -= 1
-                    self.lives = conf.lives
-                elif self.level == 1:
-                    self.lives = conf.lives
-                self.move = self.setLevelMoveCount(self.level)
-                self.moves = []
                 self.inGame = True
-                self.resetLevel = False
                 self.pressed = False
             else:
                 self.msgTimer = str(
                     self.pauseTime//1000-(self.getTick()-self.pauseTimer)//1000)
         self.setLabels()
+
+    def getTodayAverage(self):
+        result = 0
+        for k, v in self.games.items():
+            result += v[0]
+        return result/len(self.games)
+
+    def getLevelResultPercent(self, aa, bb):
+        if aa == 0 and bb == 0:
+            a, b = 1, 0
+        elif aa == 0 and bb > 0:
+            a, b = 0, 1
+        else:
+            a, b = aa, bb
+        return int(a*100/(a+b))
 
     def setLabels(self):
         self.board.lblLevel.setText("N-Back "+str(self.level))
@@ -129,4 +167,9 @@ class GameLogic:
         return pygame.time.get_ticks()
 
     def quit(self):
-        pass
+        for k, v in self.games.items():
+            print("#"+str(k), "A"+str(v[0])+"B", v[1], v[2])
+        s = "Play Time {}m{}s max:{} Av:{}".format(
+            self.gameTimer//1000//60, self.gameTimer//1000 % 60,
+            self.max, self.gameAverage)
+        print(s)

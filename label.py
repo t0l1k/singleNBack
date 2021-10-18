@@ -14,7 +14,7 @@ class Label:
         image = pygame.Surface((self.rect.w, self.rect.h))
         image.fill(conf.cellBgColor)
         pygame.draw.rect(image, conf.cellFgColor, self.rect, 3)
-        font = pygame.font.SysFont(None, int(self.rect.h*0.7))
+        font = pygame.font.SysFont(None, int(self.rect.h*0.5))
         text = font.render(self.str, True, conf.cellFgColor)
         x = self.rect.w/2-text.get_width()//2
         y = self.rect.h/2-text.get_height()//2

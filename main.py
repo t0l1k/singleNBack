@@ -5,6 +5,7 @@ from game_logic import GameLogic
 
 def main():
     pygame.init()
+    pygame.display.set_caption("Single N Back")
     clock = pygame.time.Clock()
     fps = 30
     screen = setScreen(conf.isFullScreen)
