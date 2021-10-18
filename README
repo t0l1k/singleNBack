@@ -1,0 +1,11 @@
+Приложение для тренировки рабочей памяти.
+
+Для запуска требуется установленный питон версии 3, и библиотека pygame
+
+$ python3 -m pip install -U pygame --user # требуется эта библиотека
+
+$ git clone https://github.com/t0l1k/singleNBack.git # или скачать и расспаковать куда-то у себя на диск
+
+$ cd singleNBack/
+
+$ python3 main.py # запустить приложение
