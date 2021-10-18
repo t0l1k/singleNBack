@@ -35,6 +35,7 @@ class GameLogic:
         self.games = {}
         self.max = conf.beginLevel
         self.lastTimeToNextCellCheck = self.getTick()
+        self.resetLevel = False
 
     def resetNewCellTimer(self):
         self.beginNewCell = self.getTick()-self.delayBeforeShow
@@ -71,6 +72,8 @@ class GameLogic:
         elif self.pressed:  # еще не могло быть повтора
             self.countWrong += 1
             self.bgColor = conf.orange
+        if self.countWrong > 0 and conf.resetLevelOnFirstWrong:
+            self.resetLevel = True
         self.pressed = False
 
     def update(self):
@@ -89,7 +92,8 @@ class GameLogic:
                 if self.getTick() > self.delayBeforeShow+self.delayEnd and not self.board.isCellActive():  # время показать новую иконку
                     self.checkLastMove()
                     self.board.cellOn()
-                    if self.move < 1:  # переход на следующий уровень
+                    if self.move < 1 or self.resetLevel:  # переход на следующий уровень
+                        self.resetLevel = False
                         self.gameCount += 1
                         self.pauseTimer = self.getTick()
                         self.move = 0
