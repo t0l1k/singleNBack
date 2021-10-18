@@ -24,7 +24,7 @@ class Board:
         self.lblPauseTimer.visible = False
 
     def createField(self, w, h):
-        size = 3
+        size = conf.fieldSize
         cellSize = h/(size+1)
         marginX = w/2 - (cellSize*size)/2
         marginY = h/2 - (cellSize*size)/2

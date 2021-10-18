@@ -125,11 +125,13 @@ class GameLogic:
                         self.board.lblPauseNextLevel.visible = True
                         self.board.lblPauseTimer.visible = True
         else:
-            if self.getTick()-self.pauseTimer > self.pauseTime:  # пауза закончилась
-                self.board.lblPauseNextLevel.visible = False
+            if self.getTick()-self.pauseTimer > self.pauseTime and conf.autoToNextLevel:  # пауза закончилась
+                self.startNextLevel()
+            elif self.getTick()-self.pauseTimer > self.pauseTime and not conf.autoToNextLevel:
+                if self.pressed:
+                    self.startNextLevel()
+                self.msg = "нажмите <Space> для продолжения"
                 self.board.lblPauseTimer.visible = False
-                self.inGame = True
-                self.pressed = False
             else:
                 self.msgTimer = str(
                     self.pauseTime//1000-(self.getTick()-self.pauseTimer)//1000)
@@ -153,10 +155,11 @@ class GameLogic:
     def setLabels(self):
         self.board.lblLevel.setText("N-Back "+str(self.level))
         self.board.lblMove.setText(str(self.move))
-        self.board.lblTimer.setText(str(self.gameTimer//1000))
+        timeStr = "{:>02}:{:>02}".format(
+            self.gameTimer//1000//60, self.gameTimer//1000 % 60)
+        self.board.lblTimer.setText(timeStr)
         self.board.lblLives.setText("Lives: "+str(self.lives))
-        self.board.lblPauseNextLevel.setText(
-            self.msg+" уровень:"+str(self.level))
+        self.board.lblPauseNextLevel.setText(self.msg)
         self.board.lblPauseTimer.setText(self.msgTimer)
 
     def draw(self, screen):
@@ -168,8 +171,15 @@ class GameLogic:
 
     def quit(self):
         for k, v in self.games.items():
-            print("#"+str(k), "A"+str(v[0])+"B", v[1], v[2])
+            # v[2] поле с датой начала игры
+            print("#"+str(k), "A"+str(v[0])+"B", v[1])
         s = "Play Time {}m{}s max:{} Av:{}".format(
             self.gameTimer//1000//60, self.gameTimer//1000 % 60,
             self.max, self.gameAverage)
         print(s)
+
+    def startNextLevel(self):
+        self.board.lblPauseNextLevel.visible = False
+        self.board.lblPauseTimer.visible = False
+        self.inGame = True
+        self.pressed = False

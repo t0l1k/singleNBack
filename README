@@ -9,3 +9,5 @@ $ git clone https://github.com/t0l1k/singleNBack.git # или скачать и 
 $ cd singleNBack/
 
 $ python3 main.py # запустить приложение
+
+Управление клавиша пробел отметить повтор, клавиша escape выход из приложения.
