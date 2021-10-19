@@ -55,7 +55,8 @@ class Board:
         self.lblLevel.draw(screen)
         self.lblMove.draw(screen)
         self.lblTimer.draw(screen)
-        self.lblLives.draw(screen)
+        if not conf.manualMode:
+            self.lblLives.draw(screen)
         for cell in self.field:
             cell.draw(screen)
         self.lblPauseNextLevel.draw(screen)

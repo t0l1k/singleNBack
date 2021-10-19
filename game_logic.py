@@ -110,10 +110,10 @@ class GameLogic:
                             self.gameCount, self.level, self.countCorrect, self.countWrong, self.levelResult, self.max, round(self.gameAverage, 1))
                         self.msg = s
                         print(s)
-                        if self.levelResult >= conf.nextLevelPercent:  # переход на следующий уровень
+                        if self.levelResult >= conf.nextLevelPercent and not conf.manualMode:  # переход на следующий уровень
                             self.level += 1
                             self.lives = conf.lives
-                        elif self.levelResult < conf.dropLevelPercent:  # переход на уровень ниже
+                        elif self.levelResult < conf.dropLevelPercent and not conf.manualMode:  # переход на уровень ниже
                             self.lives -= 1
                             if self.lives == 0:
                                 self.level -= 1
@@ -157,7 +157,8 @@ class GameLogic:
         return int(a*100/(a+b))
 
     def setLabels(self):
-        self.board.lblLevel.setText("N-Back "+str(self.level))
+        self.board.lblLevel.setText(
+            "#"+str(self.gameCount)+" N-Back "+str(self.level))
         self.board.lblMove.setText(str(self.move))
         timeStr = "{:>02}:{:>02}".format(
             self.gameTimer//1000//60, self.gameTimer//1000 % 60)
@@ -179,7 +180,7 @@ class GameLogic:
             print("#"+str(k), "A"+str(v[0])+"B", v[1])
         s = "Play Time {}m{}s max:{} Av:{}".format(
             self.gameTimer//1000//60, self.gameTimer//1000 % 60,
-            self.max, self.gameAverage)
+            self.max, round(self.gameAverage, 1))
         print(s)
 
     def startNextLevel(self):

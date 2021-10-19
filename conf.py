@@ -1,10 +1,11 @@
-beginLevel = 1  # начальный уровень
+beginLevel = 3  # начальный уровень
+manualMode = False  # играть только на одном уровне установленном beginLevel
 lives = 3  # число попыток
 moves = 5  # базовое число ходов
 maxMoves = 0  # ходов на уровне
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
 
 timeToNextCell = 2000  # длительность до новой иконки
 timeShowCell = 1000  # длительность показа иконки
