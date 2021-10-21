@@ -22,8 +22,9 @@ class Label:
         return image
 
     def setText(self, str):
-        self.str = str
-        self.image = self.setImage()
+        if self.visible:
+            self.str = str
+            self.image = self.setImage()
 
     def draw(self, screen):
         if self.visible:

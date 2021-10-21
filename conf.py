@@ -1,5 +1,5 @@
-beginLevel = 3  # начальный уровень
-manualMode = False  # играть только на одном уровне установленном beginLevel
+beginLevel = 1  # начальный уровень
+manualMode = False  # играть только на одном уровне установленном в beginLevel
 lives = 3  # число попыток
 moves = 5  # базовое число ходов
 maxMoves = 0  # ходов на уровне
@@ -29,3 +29,5 @@ bgColor = gray  # цвет фона
 cellBgColor = black  # цвет фона клетки
 cellFgColor = aqua  # цвет текста клетки
 cellActiveColor = yellow  # цвет активной клетки
+
+todayGamesData = {}  # level, countCorrect, countWrong, lives, date, percent

@@ -1,6 +1,7 @@
 import pygame
 import conf
-from game_logic import GameLogic
+from app import App
+import logging as log
 
 
 def main():
@@ -10,18 +11,23 @@ def main():
     fps = 30
     screen = setScreen(conf.isFullScreen)
     conf.w, conf.h = pygame.display.get_window_size()
+    app = App()
+    log.debug("init App")
     done = False
-    game = GameLogic()
-    game.start()
     while not done:
         for e in pygame.event.get():
-            if pygame.key.get_pressed()[pygame.K_ESCAPE] or e.type == pygame.QUIT:
-                game.quit()
+            if e.type == pygame.QUIT:
                 done = True
-            elif pygame.key.get_pressed()[pygame.K_SPACE]:
-                game.keyPressed()
-        game.update()
-        game.draw(screen)
+                log.debug("quit")
+            if e.type == pygame.KEYUP:
+                if e.key == pygame.K_ESCAPE:
+                    if app.quitScene():
+                        done = True
+                        log.debug("quit from app")
+                elif e.key == pygame.K_SPACE:
+                    app.keyPressed()
+        app.update()
+        app.draw(screen)
         pygame.display.update()
         clock.tick(fps)
     pygame.quit()
@@ -38,4 +44,8 @@ def setScreen(isFull):
 
 
 if __name__ == "__main__":
+    log.basicConfig(
+        level=log.WARNING,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[log.StreamHandler()])
     main()
