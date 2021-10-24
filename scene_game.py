@@ -22,6 +22,7 @@ class SceneGame:
         else:
             self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
+        self.app.sessionTimer.reset()
 
     def resultsStart(self):
         self.gameResults = GameResults()
@@ -33,6 +34,10 @@ class SceneGame:
     def update(self):
         if self.game.inGame:
             self.game.update()
+        elif self.gameResults.inGame:
+            self.gameResults.update()
+        if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
+            self.startNewGame()
         if not self.game.inGame and not self.gameResults.inGame:
             # запуск после завершения игры, узнать результаты
             log.debug("передача результатов игры")
@@ -40,6 +45,7 @@ class SceneGame:
             self.gameResults.getGameResult(self.gameCount)
             self.gameResults.bgColor = self.game.bgColor
             self.gameResults.inGame = True
+        self.app.sessionTimer.update()
 
     def draw(self, screen):
         if self.game.inGame:
@@ -48,17 +54,20 @@ class SceneGame:
             self.gameResults.draw(screen)
 
     def keyPressed(self):
-        log.debug("space pressed in sceneGame")
+        log.info("space pressed in sceneGame")
         if self.game.inGame:
             self.game.keyPressed()
         elif self.gameResults.inGame:
             if self.gameResults.keyPressed():  # запустить новую игру
-                self.gameResults.inGame = False
-                self.calculateNextLevel()
-                self.gameCount += 1
-                conf.todayGamesData[self.gameCount] = [
-                    self.gameResults.level, -1, -1, self.gameResults.lives, 0, 0]
-                self.gameStart(self.gameResults.level, self.gameResults.lives)
+                self.startNewGame()
+
+    def startNewGame(self):
+        self.gameResults.inGame = False
+        self.calculateNextLevel()
+        self.gameCount += 1
+        conf.todayGamesData[self.gameCount] = [
+            self.gameResults.level, -1, -1, self.gameResults.lives, 0, 0]
+        self.gameStart(self.gameResults.level, self.gameResults.lives)
 
     def calculateNextLevel(self):
         if self.gameResults.percent > conf.nextLevelPercent and not conf.manualMode:
@@ -72,11 +81,12 @@ class SceneGame:
             if self.gameResults.level < 1:
                 self.gameResults.level = 1
                 self.gameResults.lives = conf.lives
-        log.info("Вычислили новый уровень:%s жизней:%s",
-                 self.gameResults.level, self.gameResults.lives)
+        log.debug("Вычислили новый уровень:%s жизней:%s",
+                  self.gameResults.level, self.gameResults.lives)
 
     def quit(self):
-        log.debug("quit in sceneGame")
+        log.info("quit in sceneGame")
+        self.app.sessionTimer.pause()
         if self.gameResults.quit():
             self.app.sceneToday.getGames()
             self.app.setSceneToday()

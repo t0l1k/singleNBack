@@ -1,3 +1,4 @@
+import pygame
 import conf
 from label import Label
 import logging as log
@@ -12,7 +13,13 @@ class GameResults:
         x = conf.w/2-w/2
         y = conf.h/2-h/2
         self.lblResults = Label("---", (x, y), (w, h))
+        w, h = int(conf.w*0.3), int(conf.h*0.3)
+        x = conf.w/2-w/2
+        y = conf.h/4-h/2
+        self.lblTimer = Label("---", (x, y), (w, h))
         self.bgColor = conf.gray
+        self.pauseTime = conf.timePause*1000
+        self.pauseTimer = pygame.time.get_ticks()
 
     def getGameResult(self, count):
         self.level = conf.todayGamesData[count][0]
@@ -22,20 +29,34 @@ class GameResults:
         s = "#{} Уровень:{} процент:{} правильных:{} ошибок:{}".format(
             count, self.level, self.percent, correct, wrong)
         self.lblResults.setText(s)
-        log.info(s)
+        self.lblTimer.visible = True
+        self.pauseTime = (conf.lives + 1 - self.lives) * conf.timePause*1000
+        self.pauseTimer = pygame.time.get_ticks()
+        log.debug(s)
 
     def update(self):
-        pass
+        if self.inGame:
+            if self.isPaused():
+                self.lblTimer.visible = False
+            else:
+                self.lblTimer.setText(
+                    str(self.pauseTime//1000-(pygame.time.get_ticks()-self.pauseTimer)//1000))
+
+    def isPaused(self):
+        return pygame.time.get_ticks()-self.pauseTimer > self.pauseTime
 
     def draw(self, screen):
         screen.fill(self.bgColor)
         self.lblName.draw(screen)
         self.lblResults.draw(screen)
+        self.lblTimer.draw(screen)
 
     def keyPressed(self):
-        log.debug("Запустить новую игру")
+        if not self.isPaused():
+            return False
+        log.info("Запустить новую игру")
         return True
 
     def quit(self):
-        log.debug("quit in game results")
+        log.info("quit in game results")
         return True

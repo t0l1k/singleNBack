@@ -39,13 +39,15 @@ def setScreen(isFull):
             (0, 0), pygame.NOFRAME)
         pygame.display.toggle_fullscreen()
     else:
-        screen = pygame.display.set_mode((800, 600))
+        # w, h = pygame.display.list_modes()[7]
+        w, h = 1024, 768
+        screen = pygame.display.set_mode((w, h))
     return screen
 
 
 if __name__ == "__main__":
     log.basicConfig(
-        level=log.WARNING,
+        level=log.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[log.StreamHandler()])
     main()

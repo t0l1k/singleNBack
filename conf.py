@@ -30,4 +30,5 @@ cellBgColor = black  # цвет фона клетки
 cellFgColor = aqua  # цвет текста клетки
 cellActiveColor = yellow  # цвет активной клетки
 
+#####
 todayGamesData = {}  # level, countCorrect, countWrong, lives, date, percent

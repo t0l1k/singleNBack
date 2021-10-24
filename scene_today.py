@@ -25,16 +25,16 @@ class SceneToday:
                 max = v[0]
             sum += level
         if len(conf.todayGamesData) > 0:
-            average = sum/len(conf.todayGamesData)
+            average = round(sum/len(conf.todayGamesData), 2)
         else:
             average = 0
-        s = "Pos: Игр:{} Max:{} Avg:{}".format(
-            len(conf.todayGamesData), max, average)
-        log.info(s)
+        s = "Pos: Игр:{} Max:{} Avg:{} Игровое время:{}".format(
+            len(conf.todayGamesData), max, average, self.app.sessionTimer)
+        log.debug(s)
         self.lblTodayGames.setText(s)
         for k, v in conf.todayGamesData.items():
             s = "#{} Level:{} Percent:{}".format(k, v[0], v[5])
-            log.info(s)
+            log.debug(s)
 
     def getScene(self):
         return self.next
@@ -51,9 +51,9 @@ class SceneToday:
         self.lblTodayGames.draw(screen)
 
     def keyPressed(self):
-        log.debug("space pressed in sceneToday")
+        log.info("space pressed in sceneToday")
         self.app.setSceneGame()
 
     def quit(self):
-        log.debug("quit in sceneToday")
+        log.info("quit in sceneToday")
         return True

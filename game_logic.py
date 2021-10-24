@@ -49,25 +49,25 @@ class GameLogic:
             # уже есть что анализировать на правильный ход
             s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, conf.maxMoves-self.moveCount, self.moves[len(
                 self.moves)-self.level-1:len(self.moves)], self.board.lastActiveCellNr, self.moves[len(self.moves)-1-self.level])
-            log.info(s)
+            log.debug(s)
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
                 # есть повтор n-шагов назад
                 if self.pressed:  # правильный ответ
                     self.countCorrect += 1
                     self.bgColor = conf.green
-                    log.info("правильный ответ")
+                    log.debug("правильный ответ")
                 else:  # пропустили правильный ответ
                     self.countWrong += 1
                     self.bgColor = conf.red
-                    log.info("пропустили ответ")
+                    log.debug("пропустили ответ")
             elif self.pressed:  # определен повтор неправильно
                 self.countWrong += 1
                 self.bgColor = conf.orange
-                log.info("не было повтора")
+                log.debug("не было повтора")
         elif self.pressed:  # еще не могло быть повтора
             self.countWrong += 1
             self.bgColor = conf.orange
-            log.info("не было повтора")
+            log.debug("не было повтора")
         if self.countWrong > 0 and conf.resetLevelOnFirstWrong:
             self.resetLevel = True
         self.pressed = False
@@ -86,17 +86,17 @@ class GameLogic:
             if self.getTick()-self.beginNewCell < self.timeToNextCell:
                 # во время показа новой иконки
                 if self.getTick() > self.delayBeforeShow+self.delayEnd and not self.board.isCellActive():
-                    log.info("время для новой клетки")
+                    log.debug("время для новой клетки")
                     self.checkLastMove()
                     self.board.cellOn()
                     if self.moveCount < 1 or self.resetLevel:  # переход на следующий уровень
-                        log.info("игра окончена")
+                        log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
         self.setLabels()
 
     def sendGameResult(self):
-        log.debug("узнать результаты игры")
+        log.info("узнать результаты игры")
         return [
             self.level,
             self.countCorrect,
