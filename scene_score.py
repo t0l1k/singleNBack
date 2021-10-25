@@ -18,6 +18,12 @@ class SceneScore:
     def draw(self, screen):
         screen.fill(conf.blue)
 
+    def keyUp(self):
+        pass
+
+    def keyDown(self):
+        pass
+
     def keyPressed(self):
         self.app.setSceneToday()
 

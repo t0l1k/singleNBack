@@ -26,6 +26,11 @@ def main():
                         log.debug("quit from app")
                 elif e.key == pygame.K_SPACE:
                     app.keyPressed()
+        keyPressed = pygame.key.get_pressed()
+        if keyPressed[pygame.K_UP]:
+            app.keyUp()
+        elif keyPressed[pygame.K_DOWN]:
+            app.keyDown()
         app.update()
         app.draw(screen)
         pygame.display.update()
@@ -40,7 +45,7 @@ def setScreen(isFull):
         pygame.display.toggle_fullscreen()
     else:
         # w, h = pygame.display.list_modes()[7]
-        w, h = 1024, 768
+        w, h = 800, 600
         screen = pygame.display.set_mode((w, h))
     return screen
 

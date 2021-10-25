@@ -1,6 +1,7 @@
 import conf
 from label import Label
 import logging as log
+from scene_today_results import ResultView
 
 
 class SceneToday:
@@ -14,6 +15,9 @@ class SceneToday:
         x = conf.w/2-w/2
         y = int(h*1.1)
         self.lblTodayGames = Label("Игры за сегодня", (x, y), (w, h))
+        w, h = conf.w*0.8, conf.h*0.75
+        x, y = (conf.w-w)/2, conf.h-h*1.03
+        self.resultsView = ResultView((x, y), (w, h))
 
     def getGames(self):
         # вычисляет средний уровень и выводит список игр и результаты
@@ -29,12 +33,21 @@ class SceneToday:
         else:
             average = 0
         s = "Pos: Игр:{} Max:{} Avg:{} Игровое время:{}".format(
-            len(conf.todayGamesData), max, average, self.app.sessionTimer)
+            len(conf.todayGamesData), max, average, self.app.sceneGame.sessionTimer)
         log.debug(s)
         self.lblTodayGames.setText(s)
         for k, v in conf.todayGamesData.items():
             s = "#{} Level:{} Percent:{}".format(k, v[0], v[5])
             log.debug(s)
+        self.resultsView.dirty = True
+
+    def keyUp(self):
+        log.info("Up pressed")
+        self.resultsView.keyUp()
+
+    def keyDown(self):
+        log.info("Down pressed")
+        self.resultsView.keyDown()
 
     def getScene(self):
         return self.next
@@ -43,17 +56,16 @@ class SceneToday:
         self.next = next
 
     def update(self):
-        pass
+        self.resultsView.update()
 
     def draw(self, screen):
         screen.fill(conf.green)
         self.lblName.draw(screen)
         self.lblTodayGames.draw(screen)
+        self.resultsView.draw(screen)
 
     def keyPressed(self):
-        log.info("space pressed in sceneToday")
         self.app.setSceneGame()
 
     def quit(self):
-        log.info("quit in sceneToday")
         return True

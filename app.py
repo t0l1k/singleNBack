@@ -11,10 +11,6 @@ class App:
         self.sceneToday = SceneToday(self)
         self.sceneGame = SceneGame(self)
         self.currentScene = self.sceneToday
-        w, h = int(conf.w*0.2), int(conf.h*0.1)
-        self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
-        self.sessionTimer = Timer()
-        self.sessionTimer.start()
 
     def setSceneToday(self):
         self.sceneToday.setScene(None)
@@ -28,18 +24,20 @@ class App:
 
     def update(self):
         self.currentScene.update()
-        self.lblTimer.setText(self.sessionTimer.__str__())
 
     def draw(self, screen):
         self.currentScene.draw(screen)
-        self.lblTimer.draw(screen)
+
+    def keyUp(self):
+        self.currentScene.keyUp()
+
+    def keyDown(self):
+        self.currentScene.keyDown()
 
     def keyPressed(self):
-        log.info("space pressed in app")
         self.currentScene.keyPressed()
 
     def quitScene(self):
-        log.info("quit scene in app")
         if self.currentScene.next is None:
             self.currentScene.quit()
             return True

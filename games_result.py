@@ -58,5 +58,5 @@ class GameResults:
         return True
 
     def quit(self):
-        log.info("quit in game results")
+        log.info("Выход со сцены результатов")
         return True

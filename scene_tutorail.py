@@ -18,6 +18,12 @@ class SceneTutorial:
     def draw(self, screen):
         screen.fill(conf.gray)
 
+    def keyUp(self):
+        pass
+
+    def keyDown(self):
+        pass
+
     def keyPressed(self):
         self.app.setSceneToday()
 

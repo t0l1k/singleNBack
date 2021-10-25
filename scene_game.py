@@ -1,7 +1,9 @@
 import conf
+import logging as log
 from game_logic import GameLogic
 from games_result import GameResults
-import logging as log
+from label import Label
+from scene_game_timer import Timer
 
 
 class SceneGame:
@@ -9,6 +11,10 @@ class SceneGame:
         self.app = app
         self.next = app.sceneToday
         self.gameCount = len(conf.todayGamesData)  # узнать номер игры
+        w, h = int(conf.w*0.2), int(conf.h*0.1)
+        self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
+        self.sessionTimer = Timer()
+        self.sessionTimer.start()
 
     def getScene(self):
         return self.next
@@ -22,7 +28,7 @@ class SceneGame:
         else:
             self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
-        self.app.sessionTimer.reset()
+        self.sessionTimer.reset()
 
     def resultsStart(self):
         self.gameResults = GameResults()
@@ -45,16 +51,23 @@ class SceneGame:
             self.gameResults.getGameResult(self.gameCount)
             self.gameResults.bgColor = self.game.bgColor
             self.gameResults.inGame = True
-        self.app.sessionTimer.update()
+        self.sessionTimer.update()
+        self.lblTimer.setText(self.sessionTimer.__str__())
 
     def draw(self, screen):
         if self.game.inGame:
             self.game.draw(screen)
         elif self.gameResults.inGame:
             self.gameResults.draw(screen)
+        self.lblTimer.draw(screen)
+
+    def keyUp(self):
+        pass
+
+    def keyDown(self):
+        pass
 
     def keyPressed(self):
-        log.info("space pressed in sceneGame")
         if self.game.inGame:
             self.game.keyPressed()
         elif self.gameResults.inGame:
@@ -75,7 +88,7 @@ class SceneGame:
             self.gameResults.lives = conf.lives
         elif self.gameResults.percent < conf.dropLevelPercent and not conf.manualMode:
             self.gameResults.lives -= 1
-            if self.gameResults.lives == 0:
+            if self.gameResults.lives <= 0:
                 self.gameResults.level -= 1
                 self.gameResults.lives = conf.lives
             if self.gameResults.level < 1:
@@ -85,8 +98,7 @@ class SceneGame:
                   self.gameResults.level, self.gameResults.lives)
 
     def quit(self):
-        log.info("quit in sceneGame")
-        self.app.sessionTimer.pause()
+        self.sessionTimer.pause()
         if self.gameResults.quit():
             self.app.sceneToday.getGames()
             self.app.setSceneToday()
