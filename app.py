@@ -1,9 +1,6 @@
-import conf
 import logging as log
 from scene_today import SceneToday
 from scene_game import SceneGame
-from label import Label
-from scene_game_timer import Timer
 
 
 class App:

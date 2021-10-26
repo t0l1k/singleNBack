@@ -59,7 +59,7 @@ class SceneToday:
         self.resultsView.update()
 
     def draw(self, screen):
-        screen.fill(conf.green)
+        screen.fill(conf.bgColor)
         self.lblName.draw(screen)
         self.lblTodayGames.draw(screen)
         self.resultsView.draw(screen)

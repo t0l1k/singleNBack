@@ -17,7 +17,7 @@ class GameResults:
         x = conf.w/2-w/2
         y = conf.h/4-h/2
         self.lblTimer = Label("---", (x, y), (w, h))
-        self.bgColor = conf.gray
+        self.bgColor = conf.bgColor
         self.pauseTime = conf.timePause*1000
         self.pauseTimer = pygame.time.get_ticks()
 

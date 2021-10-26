@@ -12,7 +12,7 @@ def main():
     screen = setScreen(conf.isFullScreen)
     conf.w, conf.h = pygame.display.get_window_size()
     app = App()
-    log.debug("init App")
+    log.debug("init App in mode %s %s", conf.w, conf.h)
     done = False
     while not done:
         for e in pygame.event.get():

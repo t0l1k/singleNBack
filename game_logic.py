@@ -37,7 +37,7 @@ class GameLogic:
 
     def setLevelMoveCount(self, level):
         # вычислить число ходов на основе константы maxMoves
-        conf.maxMoves = conf.moves*level+level+1
+        conf.maxMoves = conf.moves*level+level
         return conf.maxMoves
 
     def keyPressed(self):

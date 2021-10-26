@@ -16,15 +16,18 @@ class ResultView:
             (self.rect.w, getHeihtForSurface(self.rect.h)[0]))
         self.board_rect = self.board.get_rect()
         self.board.fill((0, 128, 128))
-        i = 0
+        boxWidth = self.rect.w/2
         boxHeight = getHeihtForSurface(self.rect.h)[1]
-        for k, v in conf.todayGamesData.items():
-            s = "#{} Уровень:{} Процент:{} Правильных:{} Ошибок:{}".format(
-                k, v[0], v[5], v[1], v[2])
-            l = Label(s, (0, i*boxHeight), (self.rect.w, boxHeight))
-            l.draw(self.board)
-            i += 1
-            print(s)
+        keys = list(conf.todayGamesData.keys())
+        values = list(conf.todayGamesData.values())
+        for y in range(len(conf.todayGamesData)//2):
+            for x in range(2):
+                idx = y*2+x
+                s = "#{} Уровень:{} Процент:{}".format(
+                    keys[idx], values[idx][0], values[idx][5])
+                l = Label(s, (x*boxWidth, y*boxHeight),
+                          (boxWidth, boxHeight))
+                l.draw(self.board)
         self.rect.clamp_ip(self.board_rect)
         self.image = self.board.subsurface(self.rect)
         self.dirty = False
@@ -46,16 +49,17 @@ class ResultView:
 
 
 def getHeihtForSurface(hH):
-    lenght = len(conf.todayGamesData) if len(conf.todayGamesData) > 0 else 1
-    boxHeight = 50
+    lenght = len(conf.todayGamesData) if len(conf.todayGamesData)/2 > 0 else 1
+    size = conf.w*0.05
+    boxHeight = size
     hSurf = boxHeight*lenght
     if boxHeight*lenght < hH:
         boxHeight = hH/lenght
         hSurf = boxHeight*lenght
-        if boxHeight < 50:
-            boxHeight = 50
+        if boxHeight < size:
+            boxHeight = size
             hSurf = boxHeight*lenght
-        elif boxHeight > 50:
-            boxHeight = 50
+        elif boxHeight > size:
+            boxHeight = size
             hSurf = hH
     return (hSurf, boxHeight)
