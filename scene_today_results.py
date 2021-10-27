@@ -16,7 +16,7 @@ class ResultView:
         self.board = pygame.Surface(
             (self.rect.w, getHeihtForSurface(self.rect.h, self.rows)[0]))
         self.board_rect = self.board.get_rect()
-        self.board.fill((0, 128, 128))
+        self.board.fill(conf.cellActiveColor)
         boxWidth = self.rect.w/self.rows
         boxHeight = getHeihtForSurface(self.rect.h, self.rows)[1]
         keys = list(conf.todayGamesData.keys())

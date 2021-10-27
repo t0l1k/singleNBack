@@ -52,10 +52,11 @@ class SceneGame:
             # запуск после завершения игры, узнать результаты
             log.debug("передача результатов игры")
             conf.todayGamesData[self.gameCount] = self.game.sendGameResult()
-            self.gameResults.getGameResult(self.gameCount)
             self.gameResults.bgColor = self.game.bgColor
+            self.gameResults.getGameResult(self.gameCount)
             self.gameResults.inGame = True
         self.sessionTimer.update()
+        self.lblTimer.setBgColor(self.game.bgColor)
         self.lblTimer.setText(self.sessionTimer.__str__())
 
     def draw(self, screen):

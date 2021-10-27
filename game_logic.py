@@ -42,7 +42,7 @@ class GameLogic:
 
     def keyPressed(self):
         self.pressed = True
-        self.bgColor = conf.blue
+        self.bgColor = conf.regularColor
 
     def checkLastMove(self):
         if len(self.moves) > self.level:
@@ -54,19 +54,19 @@ class GameLogic:
                 # есть повтор n-шагов назад
                 if self.pressed:  # правильный ответ
                     self.countCorrect += 1
-                    self.bgColor = conf.green
+                    self.bgColor = conf.correctColor
                     log.debug("правильный ответ")
                 else:  # пропустили правильный ответ
                     self.countWrong += 1
-                    self.bgColor = conf.red
+                    self.bgColor = conf.errorColor
                     log.debug("пропустили ответ")
             elif self.pressed:  # определен повтор неправильно
                 self.countWrong += 1
-                self.bgColor = conf.orange
+                self.bgColor = conf.warningColor
                 log.debug("не было повтора")
         elif self.pressed:  # еще не могло быть повтора
             self.countWrong += 1
-            self.bgColor = conf.orange
+            self.bgColor = conf.warningColor
             log.debug("не было повтора")
         if self.countWrong > 0 and conf.resetLevelOnFirstWrong:
             self.resetLevel = True

@@ -14,15 +14,17 @@ class Cell:
     def setImage(self):
         image = pygame.Surface((self.rect.w, self.rect.h))
         image.fill(conf.cellBgColor)
-        pygame.draw.rect(image, conf.cellFgColor, self.rect, 3)
+        pygame.draw.rect(image, conf.cellFgColor,
+                         self.rect, 3, border_radius=8)
         return image
 
     def setImageActive(self):
         image = pygame.Surface((self.rect.w, self.rect.h))
         image.fill(conf.cellBgColor)
-        pygame.draw.rect(image, conf.cellFgColor, self.rect, 3)
+        pygame.draw.rect(image, conf.cellFgColor,
+                         self.rect, 3, border_radius=8)
         pygame.draw.rect(image, conf.cellActiveColor,
-                         (self.margin, self.margin, self.rect.w-self.margin*2, self.rect.h-self.margin*2))
+                         (self.margin, self.margin, self.rect.w-self.margin*2, self.rect.h-self.margin*2), border_radius=8)
         return image
 
     def draw(self, screen):

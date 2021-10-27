@@ -14,15 +14,15 @@ class GameResults:
 
     def setupScene(self):
         w, h = int(conf.w*0.2), int(conf.h*0.07)
-        self.lblName = Label("Results", (0, 0), (w, h))
+        self.lblName = Label("Results", (0, 0), (w, h), bg=self.bgColor)
         w = int(conf.w*0.95)
         x = conf.w/2-w/2
         y = conf.h/2-h/2
-        self.lblResults = Label("---", (x, y), (w, h))
+        self.lblResults = Label("---", (x, y), (w, h), bg=self.bgColor)
         w, h = int(conf.w*0.3), int(conf.h*0.3)
         x = conf.w/2-w/2
         y = conf.h/4-h/2
-        self.lblTimer = Label("---", (x, y), (w, h))
+        self.lblTimer = Label("---", (x, y), (w, h), bg=self.bgColor)
 
     def getGameResult(self, count):
         self.level = conf.todayGamesData[count][0]
@@ -35,6 +35,9 @@ class GameResults:
         self.lblTimer.visible = True
         self.pauseTime = (conf.lives + 1 - self.lives) * conf.timePause*1000
         self.pauseTimer = pygame.time.get_ticks()
+        self.lblName.setBgColor(self.bgColor)
+        self.lblResults.setBgColor(self.bgColor)
+        self.lblTimer.setBgColor(self.bgColor)
         log.debug(s)
 
     def update(self):
