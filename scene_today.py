@@ -8,9 +8,11 @@ class SceneToday:
     def __init__(self, app) -> None:
         self.app = app
         self.next = None
-        self.name = "Игры сегодня"
-        w, h = int(conf.w*0.2), int(conf.h*0.1)
-        self.lblName = Label(self.name, (0, 0), (w, h))
+        self.setupScene()
+
+    def setupScene(self):
+        w, h = int(conf.w*0.3), int(conf.h*0.1)
+        self.lblName = Label("Игры сегодня", (0, 0), (w, h))
         w, h = int(conf.w*0.95), int(conf.h*0.1)
         x = conf.w/2-w/2
         y = int(h*1.1)
@@ -69,3 +71,15 @@ class SceneToday:
 
     def quit(self):
         return True
+
+    def resize(self):
+        w, h = int(conf.w*0.3), int(conf.h*0.1)
+        self.lblName.resize((0, 0), (w, h))
+        w, h = int(conf.w*0.95), int(conf.h*0.1)
+        x = conf.w/2-w/2
+        y = int(h*1.1)
+        self.lblTodayGames.resize((x, y), (w, h))
+        w, h = conf.w*0.8, conf.h*0.75
+        x, y = (conf.w-w)/2, conf.h-h*1.03
+        self.resultsView.resize((x, y), (w, h))
+        log.info("Scene Today resized")

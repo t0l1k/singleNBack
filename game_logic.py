@@ -12,13 +12,13 @@ class GameLogic:
         self.gameCount = count
         self.level = level
         self.lives = lives
+        self.board = Board()
 
     def start(self):
         self.inGame = True
         self.moves = []
         self.moveCount = self.setLevelMoveCount(self.level)
         self.pressed = False
-        self.board = Board()
         self.board.setNewActiveCell()
         self.board.cellOff()
         self.bgColor = conf.bgColor
@@ -126,3 +126,6 @@ class GameLogic:
 
     def getTick(self):
         return pygame.time.get_ticks()
+
+    def resize(self):
+        self.board.resize()

@@ -8,13 +8,11 @@ class Board:
     activeCellNr = None
 
     def __init__(self) -> None:
-        self.field = self.createField(conf.w, conf.h)
-        w, h = int(conf.w*0.2), int(conf.h*0.1)
-        x = conf.w/2-w/2
-        y = conf.h/2-h/2
+        w, h = int(conf.w*0.3), int(conf.h*0.08)
         self.lblLevel = Label("---", (0, 0), (w, h))
         self.lblMove = Label("---", (conf.w-w, 0), (w, h))
         self.lblLives = Label("---", (conf.w/2-w/2, 0), (w, h))
+        self.field = self.createField(conf.w, conf.h)
 
     def createField(self, w, h):
         size = conf.fieldSize
@@ -51,3 +49,21 @@ class Board:
             self.lblLives.draw(screen)
         for cell in self.field:
             cell.draw(screen)
+
+    def resize(self):
+        w, h = conf.w, conf.h
+        size = conf.fieldSize
+        wSize = h if w > h else w
+        cellSize = wSize/(size+1)
+        marginX = w/2 - (cellSize*size)/2
+        marginY = h/2 - (cellSize*size)/2
+        for i, cell in enumerate(self.field):
+            x = i % size
+            y = i//size
+            cellX = x*cellSize+marginX
+            cellY = y*cellSize+marginY
+            cell.resize((cellX, cellY), cellSize)
+        w, h = int(conf.w*0.3), int(conf.h*0.08)
+        self.lblLevel.resize((0, 0), (w, h))
+        self.lblMove.resize((conf.w-w, 0), (w, h))
+        self.lblLives.resize((conf.w/2-w/2, 0), (w, h))

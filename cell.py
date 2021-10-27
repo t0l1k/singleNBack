@@ -7,9 +7,9 @@ class Cell:
         self.pos = pos
         self.rect = pygame.rect.Rect(0, 0, size, size)
         self.margin = int(size*.05)
-        self.active = False
         self.image = self.setImage()
         self.imageActive = self.setImageActive()
+        self.active = False
 
     def setImage(self):
         image = pygame.Surface((self.rect.w, self.rect.h))
@@ -30,3 +30,16 @@ class Cell:
             screen.blit(self.imageActive, self.pos)
         else:
             screen.blit(self.image, self.pos)
+
+    def setPos(self, pos):
+        self.pos = pos
+
+    def setSize(self, size):
+        self.rect = pygame.rect.Rect(0, 0, size, size)
+        self.margin = int(size*.05)
+
+    def resize(self, pos, size):
+        self.setPos(pos)
+        self.setSize(size)
+        self.image = self.setImage()
+        self.imageActive = self.setImageActive()

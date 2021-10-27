@@ -9,17 +9,28 @@ def main():
     pygame.display.set_caption("Single N Back")
     clock = pygame.time.Clock()
     fps = 30
-    screen = setScreen(conf.isFullScreen)
+    screen = pygame.display.set_mode((conf.w, conf.h), pygame.RESIZABLE)
     conf.w, conf.h = pygame.display.get_window_size()
     app = App()
-    log.debug("init App in mode %s %s", conf.w, conf.h)
+    log.debug("init App with screen size [%s %s]", conf.w, conf.h)
     done = False
     while not done:
         for e in pygame.event.get():
             if e.type == pygame.QUIT:
                 done = True
                 log.debug("quit")
-            if e.type == pygame.KEYUP:
+            elif e.type == pygame.WINDOWRESIZED:
+                w, h = pygame.display.get_window_size()
+                mode = (640, 480)
+                if w < mode[0]:
+                    w = mode[0]
+                if h < mode[1]:
+                    h = mode[1]
+                screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
+                conf.w, conf.h = pygame.display.get_window_size()
+                app.resize()
+                log.debug("App resized in width:%s height:%s", conf.w, conf.h)
+            elif e.type == pygame.KEYUP:
                 if e.key == pygame.K_ESCAPE:
                     if app.quitScene():
                         done = True
@@ -36,18 +47,6 @@ def main():
         pygame.display.update()
         clock.tick(fps)
     pygame.quit()
-
-
-def setScreen(isFull):
-    if isFull:
-        screen = pygame.display.set_mode(
-            (0, 0), pygame.NOFRAME)
-        pygame.display.toggle_fullscreen()
-    else:
-        # w, h = pygame.display.list_modes()[7]
-        w, h = 800, 600
-        screen = pygame.display.set_mode((w, h))
-    return screen
 
 
 if __name__ == "__main__":

@@ -10,11 +10,15 @@ class SceneGame:
     def __init__(self, app) -> None:
         self.app = app
         self.next = app.sceneToday
-        self.gameCount = len(conf.todayGamesData)  # узнать номер игры
-        w, h = int(conf.w*0.2), int(conf.h*0.1)
-        self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
         self.sessionTimer = Timer()
         self.sessionTimer.start()
+        self.gameCount = len(conf.todayGamesData)  # узнать номер игры
+        self.setupTimerLabel()
+        self.game = None
+
+    def setupTimerLabel(self):
+        w, h = int(conf.w*0.2), int(conf.h*0.08)
+        self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
 
     def getScene(self):
         return self.next
@@ -103,3 +107,10 @@ class SceneGame:
             self.app.sceneToday.getGames()
             self.app.setSceneToday()
         return False
+
+    def resize(self):
+        w, h = int(conf.w*0.2), int(conf.h*0.08)
+        self.lblTimer.resize((conf.w/2-w/2, conf.h-h), (w, h))
+        if self.game != None:
+            self.game.resize()
+            self.gameResults.resize()

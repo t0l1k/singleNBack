@@ -7,9 +7,15 @@ import logging as log
 class GameResults:
     def __init__(self) -> None:
         self.inGame = False
-        w, h = int(conf.w*0.2), int(conf.h*0.1)
+        self.bgColor = conf.bgColor
+        self.pauseTime = conf.timePause*1000
+        self.pauseTimer = pygame.time.get_ticks()
+        self.setupScene()
+
+    def setupScene(self):
+        w, h = int(conf.w*0.2), int(conf.h*0.07)
         self.lblName = Label("Results", (0, 0), (w, h))
-        w, h = int(conf.w*0.95), int(conf.h*0.1)
+        w = int(conf.w*0.95)
         x = conf.w/2-w/2
         y = conf.h/2-h/2
         self.lblResults = Label("---", (x, y), (w, h))
@@ -17,9 +23,6 @@ class GameResults:
         x = conf.w/2-w/2
         y = conf.h/4-h/2
         self.lblTimer = Label("---", (x, y), (w, h))
-        self.bgColor = conf.bgColor
-        self.pauseTime = conf.timePause*1000
-        self.pauseTimer = pygame.time.get_ticks()
 
     def getGameResult(self, count):
         self.level = conf.todayGamesData[count][0]
@@ -60,3 +63,15 @@ class GameResults:
     def quit(self):
         log.info("Выход со сцены результатов")
         return True
+
+    def resize(self):
+        w, h = int(conf.w*0.2), int(conf.h*0.08)
+        self.lblName.resize((0, 0), (w, h))
+        w = int(conf.w*0.95)
+        x = conf.w/2-w/2
+        y = conf.h/2-h/2
+        self.lblResults.resize((x, y), (w, h))
+        w, h = int(conf.w*0.3), int(conf.h*0.3)
+        x = conf.w/2-w/2
+        y = conf.h/4-h/2
+        self.lblTimer.resize((x, y), (w, h))

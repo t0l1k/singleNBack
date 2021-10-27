@@ -41,3 +41,7 @@ class App:
         else:
             self.currentScene.quit()
             return False
+
+    def resize(self):
+        self.sceneToday.resize()
+        self.sceneGame.resize()
