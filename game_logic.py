@@ -30,7 +30,11 @@ class GameLogic:
     def resetNewCellTimer(self):
         self.timeToNextCell = conf.timeToNextCell
         self.timeCellShow = conf.timeShowCell
-        self.delayBeforeShow = ((conf.timeToNextCell-conf.timeShowCell)/2)
+        if self.lives < conf.lives:
+            step = (conf.lives-self.lives)*conf.incDurrationStep
+            self.timeToNextCell += step
+            self.timeCellShow += step
+        self.delayBeforeShow = ((self.timeToNextCell-self.timeCellShow)/2)
         self.beginNewCell = self.getTick()-self.delayBeforeShow
         self.delayEnd = self.beginNewCell+self.delayBeforeShow
         self.lastTimeToNextCellCheck = self.getTick()
@@ -49,7 +53,7 @@ class GameLogic:
             # уже есть что анализировать на правильный ход
             s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, conf.maxMoves-self.moveCount, self.moves[len(
                 self.moves)-self.level-1:len(self.moves)], self.board.lastActiveCellNr, self.moves[len(self.moves)-1-self.level])
-            log.debug(s)
+            log.debug(s+" пауза:%s", self.timeToNextCell)
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
                 # есть повтор n-шагов назад
                 if self.pressed:  # правильный ответ

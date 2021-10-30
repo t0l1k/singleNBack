@@ -4,7 +4,7 @@ from label import Label
 
 
 class ResultView:
-    def __init__(self, pos, size, boxHeight=50, rows=2) -> None:
+    def __init__(self, pos, size, boxHeight=50, rows=3) -> None:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.boxHeight = boxHeight
@@ -58,7 +58,7 @@ class ResultView:
 def getHeihtForSurface(hH, rows):
     lenght = len(conf.todayGamesData) if len(
         conf.todayGamesData)/rows > 0 else 1
-    size = conf.w*0.07
+    size = conf.w*0.06
     boxHeight = size
     hSurf = boxHeight*lenght
     if boxHeight*lenght < hH:

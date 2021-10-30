@@ -9,6 +9,8 @@ resetLevelOnFirstWrong = True  # сбросить уровень при перв
 
 timeToNextCell = 2000  # длительность до новой иконки
 timeShowCell = 1000  # длительность показа иконки
+# увеличить продолжительность показа времени до новой клетки, если вопользовался дополнительной попыткой
+incDurrationStep = 500
 timePause = 5  # желательная длина паузы между подходами
 autoToNextLevel = False  # начать следующий уровень после истечения паузы
 
@@ -19,31 +21,35 @@ red = (255, 0, 0)  # цвет ошибки
 green = (0, 255, 0)  # цвет правильного ответа
 orange = (255, 165, 0)  # цвет ошибочного предположения
 blue = (0, 0, 255)  # цвет отклика пользователя
-gray = (64, 64, 64)
+gray = (144, 144, 144)
 black = (0, 0, 0)
 aqua = (0, 255, 255)
 yellow = (255, 255, 0)
-
-
-# bgColor = gray  # цвет фона
-# fgColor = aqua  # цвет текста
-# cellBgColor = bgColor  # цвет фона клетки
-# cellFgColor = aqua  # цвет текста клетки
-# cellActiveColor = yellow  # цвет активной клетки
-
-# theme 1
 green1 = (178, 203, 50)
 black1 = (41, 41, 41)
 white1 = (252, 252, 252)
-bgColor = black1
+
+# theme 0
+bgColor = gray
 fgColor = white1
 cellBgColor = bgColor
 cellFgColor = fgColor
-cellActiveColor = green1
+cellActiveColor = yellow
 regularColor = blue
-correctColor = green1
+correctColor = green
 errorColor = red
 warningColor = orange
+
+# # theme 1
+# bgColor = black1
+# fgColor = white1
+# cellBgColor = bgColor
+# cellFgColor = fgColor
+# cellActiveColor = green1
+# regularColor = blue
+# correctColor = green1
+# errorColor = red
+# warningColor = orange
 
 # theme 2
 # bgColor = (49, 119, 108)

@@ -17,7 +17,7 @@ class SceneToday:
         x = conf.w/2-w/2
         y = int(h*1.1)
         self.lblTodayGames = Label("Игры за сегодня", (x, y), (w, h))
-        w, h = conf.w*0.8, conf.h*0.75
+        w, h = conf.w*0.6, conf.h*0.75
         x, y = (conf.w-w)/2, conf.h-h*1.03
         self.resultsView = ResultView((x, y), (w, h))
 
