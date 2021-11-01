@@ -1,10 +1,11 @@
 import pygame
 import conf
+import today_games_data
 from label import Label
 
 
 class ResultView:
-    def __init__(self, pos, size, boxHeight=50, rows=3) -> None:
+    def __init__(self, pos, size, boxHeight=50, rows=4) -> None:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.boxHeight = boxHeight
@@ -19,16 +20,13 @@ class ResultView:
         self.board.fill(conf.cellActiveColor)
         boxWidth = self.rect.w/self.rows
         boxHeight = getHeihtForSurface(self.rect.h, self.rows)[1]
-        keys = list(conf.todayGamesData.keys())
-        values = list(conf.todayGamesData.values())
-        for y in range(len(conf.todayGamesData)//self.rows):
-            for x in range(self.rows):
-                idx = y*self.rows+x
-                s = "#{} Уровень:{} Процент:{}".format(
-                    keys[idx], values[idx][0], values[idx][5])
-                l = Label(s, (x*boxWidth, y*boxHeight),
-                          (boxWidth, boxHeight))
-                l.draw(self.board)
+        s = today_games_data.getDoneLevelsStr()
+        for idx, _ in enumerate(s):
+            x = idx % self.rows
+            y = idx//self.rows
+            l = Label(s[idx], (x*boxWidth, y*boxHeight),
+                      (boxWidth, boxHeight))
+            l.draw(self.board)
         self.rect.clamp_ip(self.board_rect)
         self.image = self.board.subsurface(self.rect)
         self.dirty = False
@@ -56,8 +54,8 @@ class ResultView:
 
 
 def getHeihtForSurface(hH, rows):
-    lenght = len(conf.todayGamesData) if len(
-        conf.todayGamesData)/rows > 0 else 1
+    lenght = today_games_data.getLastDoneGame(
+    ) if today_games_data.getLastDoneGame()/rows > 0 else 1
     size = conf.w*0.06
     boxHeight = size
     hSurf = boxHeight*lenght

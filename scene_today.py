@@ -1,4 +1,5 @@
 import conf
+import today_games_data
 from label import Label
 import logging as log
 from scene_today_results import ResultView
@@ -23,23 +24,11 @@ class SceneToday:
 
     def getGames(self):
         # вычисляет средний уровень и выводит список игр и результаты
-        max = 0
-        sum = 0
-        for k, v in conf.todayGamesData.items():
-            level = v[0]
-            if level > max:
-                max = v[0]
-            sum += level
-        if len(conf.todayGamesData) > 0:
-            average = round(sum/len(conf.todayGamesData), 2)
-        else:
-            average = 0
         s = "Pos: Игр:{} Max:{} Avg:{} Игровое время:{}".format(
-            len(conf.todayGamesData), max, average, self.app.sceneGame.sessionTimer)
+            today_games_data.getLastDoneGame(), today_games_data.getMaxLevel(), today_games_data.getAverage(), self.app.sceneGame.sessionTimer)
         log.debug(s)
         self.lblTodayGames.setText(s)
-        for k, v in conf.todayGamesData.items():
-            s = "#{} Level:{} Percent:{}".format(k, v[0], v[5])
+        for s in today_games_data.getDoneLevelsStr():
             log.debug(s)
         self.resultsView.dirty = True
 
@@ -56,6 +45,7 @@ class SceneToday:
 
     def setScene(self, next):
         self.next = next
+        self.getGames()
 
     def update(self):
         self.resultsView.update()

@@ -107,7 +107,8 @@ class GameLogic:
             self.countWrong,
             self.lives,
             datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
-            self.getPercent(self.countCorrect, self.countWrong)]
+            self.getPercent(self.countCorrect, self.countWrong),
+            True]
 
     def getPercent(self, aa, bb):
         if aa == 0 and bb == 0:

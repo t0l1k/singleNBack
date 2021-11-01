@@ -8,6 +8,7 @@ class App:
         self.sceneToday = SceneToday(self)
         self.sceneGame = SceneGame(self)
         self.currentScene = self.sceneToday
+        self.setSceneToday()
 
     def setSceneToday(self):
         self.sceneToday.setScene(None)

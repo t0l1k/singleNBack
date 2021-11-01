@@ -61,7 +61,3 @@ warningColor = orange
 # cellBgColor = bgColor
 # cellFgColor = fgColor
 # cellActiveColor = (178, 254, 250)
-
-
-#####
-todayGamesData = {}  # level, countCorrect, countWrong, lives, date, percent
