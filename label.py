@@ -13,8 +13,8 @@ class Label:
         self.visible = True
 
     def setImage(self):
-        image = pygame.Surface((self.rect.w, self.rect.h))
-        image.fill(self.bg)
+        image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
+        pygame.draw.rect(image, self.bg, self.rect, border_radius=8)
         pygame.draw.rect(image, self.fg, self.rect, 3, border_radius=8)
         size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
         font = pygame.font.SysFont(None, int(size*0.4))
@@ -36,7 +36,7 @@ class Label:
     def setBgColor(self, color):
         if self.visible:
             self.bg = color
-            self.setImage()
+            self.image = self.setImage()
 
     def setPos(self, pos):
         if self.visible:

@@ -93,7 +93,7 @@ class GameLogic:
                     log.debug("время для новой клетки")
                     self.checkLastMove()
                     self.board.cellOn()
-                    if self.moveCount < 1 or self.resetLevel:  # переход на следующий уровень
+                    if self.moveCount <= 0 or self.resetLevel:  # переход на следующий уровень
                         log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
