@@ -1,8 +1,8 @@
 import pygame
 import conf
-import datetime
 from board import Board
 import logging as log
+from today_games_data import GameData
 
 
 class GameLogic:
@@ -17,7 +17,7 @@ class GameLogic:
     def start(self):
         self.inGame = True
         self.moves = []
-        self.moveCount = self.setLevelMoveCount(self.level)
+        self.moveCount = self.setLevelMoveCount()
         self.pressed = False
         self.board.setNewActiveCell()
         self.board.cellOff()
@@ -39,9 +39,9 @@ class GameLogic:
         self.delayEnd = self.beginNewCell+self.delayBeforeShow
         self.lastTimeToNextCellCheck = self.getTick()
 
-    def setLevelMoveCount(self, level):
+    def setLevelMoveCount(self):
         # вычислить число ходов на основе константы maxMoves
-        conf.maxMoves = conf.moves*level+level
+        conf.maxMoves = conf.moves*self.level+self.level
         return conf.maxMoves
 
     def keyPressed(self):
@@ -101,16 +101,17 @@ class GameLogic:
 
     def sendGameResult(self):
         log.info("узнать результаты игры")
-        return [
+        return GameData(
             self.level,
-            self.countCorrect,
-            self.countWrong,
             self.lives,
-            datetime.datetime.now().strftime('%Y%m%d%H%M%S'),
-            self.getPercent(self.countCorrect, self.countWrong),
-            True]
+            self.setLevelMoveCount() - self.moveCount,
+            self.countCorrect, self.countWrong,
+            self.getPercent(),
+            True)
 
-    def getPercent(self, aa, bb):
+    def getPercent(self):
+        aa = self.countCorrect
+        bb = self.countWrong
         if aa == 0 and bb == 0:
             a, b = 1, 0
         elif aa == 0 and bb > 0:

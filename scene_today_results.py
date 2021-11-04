@@ -5,7 +5,7 @@ from label import Label
 
 
 class ResultView:
-    def __init__(self, pos, size, boxHeight=20, rows=4) -> None:
+    def __init__(self, pos, size, boxHeight=20, rows=3) -> None:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.boxHeight = boxHeight
@@ -28,7 +28,9 @@ class ResultView:
                       (boxWidth, boxHeight))
             if today_games_data.getPercentFromGame(idx) > conf.nextLevelPercent:
                 l.setBgColor(conf.regularColor)
-            elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent:
+            elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):
+                l.setBgColor(conf.warningColor)
+            elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and not today_games_data.useExtraTry(idx):
                 l.setBgColor(conf.errorColor)
             else:
                 l.setBgColor(conf.correctColor)
@@ -62,7 +64,7 @@ class ResultView:
 def getHeihtForSurface(hH, rows):
     lenght = today_games_data.getLastDoneGame(
     ) if today_games_data.getLastDoneGame()/rows > 0 else 1
-    size = conf.w*0.06
+    size = conf.w*0.05
     boxHeight = size
     hSurf = boxHeight*lenght
     if boxHeight*lenght < hH:

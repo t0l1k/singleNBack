@@ -49,8 +49,7 @@ class SceneGame:
         if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
             self.startNewGame()
         if not self.game.inGame and not self.gameResults.inGame:
-            # запуск после завершения игры, узнать результаты
-            log.debug("передача результатов игры")
+            log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
         self.sessionTimer.update()
