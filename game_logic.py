@@ -17,7 +17,7 @@ class GameLogic:
     def start(self):
         self.inGame = True
         self.moves = []
-        self.moveCount = self.setLevelMoveCount()
+        self.moveCount = self.getTotalMoves()
         self.pressed = False
         self.board.setNewActiveCell()
         self.board.cellOff()
@@ -39,10 +39,9 @@ class GameLogic:
         self.delayEnd = self.beginNewCell+self.delayBeforeShow
         self.lastTimeToNextCellCheck = self.getTick()
 
-    def setLevelMoveCount(self):
+    def getTotalMoves(self):
         # вычислить число ходов на основе константы maxMoves
-        conf.maxMoves = conf.moves*self.level+self.level
-        return conf.maxMoves
+        return conf.moves*self.level+self.level
 
     def keyPressed(self):
         self.pressed = True
@@ -51,7 +50,7 @@ class GameLogic:
     def checkLastMove(self):
         if len(self.moves) > self.level:
             # уже есть что анализировать на правильный ход
-            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, conf.maxMoves-self.moveCount, self.moves[len(
+            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, self.getTotalMoves()-self.moveCount, self.moves[len(
                 self.moves)-self.level-1:len(self.moves)], self.board.lastActiveCellNr, self.moves[len(self.moves)-1-self.level])
             log.debug(s+" пауза:%s", self.timeToNextCell)
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
@@ -104,7 +103,7 @@ class GameLogic:
         return GameData(
             self.level,
             self.lives,
-            self.setLevelMoveCount() - self.moveCount,
+            self.getTotalMoves() - self.moveCount,
             self.countCorrect, self.countWrong,
             self.getPercent(),
             True)
