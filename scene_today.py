@@ -23,8 +23,8 @@ class SceneToday:
             today_games_data.getLastDoneGame(), today_games_data.getMaxLevel(), today_games_data.getAverage(), self.app.sceneGame.sessionTimer)
         log.debug(s)
         self.lblTodayGames.setText(s)
-        for s in today_games_data.getDoneLevelsStr():
-            log.debug(s)
+        for k, v in today_games_data.get():
+            log.debug("#%s [%s]", k, v.__str__())
         self.resultsView.dirty = True
 
     def keyUp(self):

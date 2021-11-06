@@ -1,9 +1,13 @@
-import datetime
+from datetime import datetime
 
 
 class GameData:
-    def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False) -> None:
-        self._date = datetime.datetime.now().strftime('%Y%m%d%H%M%S')
+    dateBegin: datetime
+    dateEnd: datetime
+
+    def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False, dateBegin=0, dateEnd=0) -> None:
+        self._dateBegin = dateBegin
+        self._dateEnd = dateEnd
         self._level = level
         self._lives = lives
         self._moves = moves
@@ -12,6 +16,22 @@ class GameData:
         self._percent = percent
         self._isDone = isDone
         self._useExtraTry = useExtraTry
+
+    @property
+    def dateBegin(self):
+        return self._dateBegin
+
+    @dateBegin.setter
+    def dateBegin(self, value):
+        self._dateBegin = value
+
+    @property
+    def dateEnd(self):
+        return self._dateEnd
+
+    @dateEnd.setter
+    def dateEnd(self, value):
+        self._dateEnd = value
 
     @property
     def level(self):
@@ -76,3 +96,6 @@ class GameData:
     @useExtraTry.setter
     def useExtraTry(self, value):
         self._useExtraTry = value
+
+    def __str__(self) -> str:
+        return "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} Done:{} [{}] [{}]".format(self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, self.isDone, self.dateBegin, self.dateEnd)

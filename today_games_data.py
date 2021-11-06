@@ -1,3 +1,4 @@
+from datetime import timedelta
 import conf
 import logging as log
 from gamedata import GameData
@@ -21,7 +22,8 @@ def getDoneGamesStr():
     correct = getCountCorrectFromGame(count)
     wrong = getCountWrongFromGame(count)
     moves = getMoves(count)
-    return "#{} Уровень:{} процент:{} правильных:{} ошибок:{} ходов:{}".format(count, level, percent, correct, wrong, moves)
+    durration = getGameDurationStr(count)
+    return "#{} Уровень:{} процент:{} правильных:{} ошибок:{} ходов:{} длительность:{}".format(count, level, percent, correct, wrong, moves, durration)
 
 
 def getMaxLevel():
@@ -151,6 +153,17 @@ def useExtraTry(nr):
 def setExtraTry(nr):
     """param nr: Установить использование дополнительной попытки по номеру игры"""
     __todayGamesData[nr].useExtraTry = True
+
+
+def getGameDurationStr(nr):
+    dt1 = __todayGamesData[nr].dateBegin
+    dt2 = __todayGamesData[nr].dateEnd
+    dur = dt2-dt1
+    mSec = dur.microseconds
+    seconds = dur.total_seconds()
+    result = "{:02}:{:02}.{:03}".format(
+        int(seconds//60), int(seconds % 60), int(mSec/1e3))  # minutes:seconds.milliseconds
+    return result
 
 
 #####

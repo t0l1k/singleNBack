@@ -1,3 +1,4 @@
+import datetime
 import pygame
 import conf
 from board import Board
@@ -26,6 +27,7 @@ class GameLogic:
         self.countWrong = 0
         self.resetLevel = False
         self.resetNewCellTimer()
+        self.beginTime = datetime.datetime.now()
 
     def resetNewCellTimer(self):
         self.timeToNextCell = conf.timeToNextCell
@@ -106,7 +108,9 @@ class GameLogic:
             self.getTotalMoves() - self.moveCount,
             self.countCorrect, self.countWrong,
             self.getPercent(),
-            True)
+            True,
+            dateBegin=self.beginTime,
+            dateEnd=datetime.datetime.now())
 
     def getPercent(self):
         aa = self.countCorrect
