@@ -2,9 +2,6 @@ from datetime import datetime
 
 
 class GameData:
-    dateBegin: datetime
-    dateEnd: datetime
-
     def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False, dateBegin=0, dateEnd=0) -> None:
         self._dateBegin = dateBegin
         self._dateEnd = dateEnd
@@ -98,4 +95,12 @@ class GameData:
         self._useExtraTry = value
 
     def __str__(self) -> str:
-        return "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} Done:{} [{}] [{}]".format(self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, self.isDone, self.dateBegin, self.dateEnd)
+        if type(self.dateBegin) == datetime:
+            s = datetime.strftime(self.dateBegin, "%H:%M:%S.%f")[:-3]
+        else:
+            s = ""
+        if type(self.dateEnd) == datetime:
+            e = datetime.strftime(self.dateEnd, "%H:%M:%S.%f")[:-3]
+        else:
+            e = ""
+        return "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} Done:{} [{}] [{}]".format(self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, self.isDone, s, e)

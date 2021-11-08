@@ -14,7 +14,7 @@ class SceneToday:
     def setupScene(self):
         self.lblName = Label("Игры сегодня", (0, 0), (1, 1))
         self.lblTodayGames = Label("Игры за сегодня", (0, 0), (1, 1))
-        self.resultsView = ResultView((0, 0), (1, 1))
+        self.resultsView = ResultView((0, 0), (100, 100))
         self.resize()
 
     def getGames(self):

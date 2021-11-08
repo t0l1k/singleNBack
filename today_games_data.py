@@ -13,6 +13,17 @@ def getDoneLevelsStr():
     return arr
 
 
+def parseGamesData():
+    x = []
+    y = []
+    for k, v in get():
+        if v.isDone:
+            x.append(v.dateEnd)
+            result = v.percent*0.01+v.level
+            y.append(result)
+    return (x, y)
+
+
 def getDoneGamesStr():
     count = getSize()-1
     if not(isDoneGame(count)):
