@@ -9,7 +9,8 @@ def main():
     pygame.display.set_caption("Single N Back")
     clock = pygame.time.Clock()
     fps = 30
-    screen = pygame.display.set_mode((conf.w, conf.h), pygame.RESIZABLE)
+    isFullScreen = False
+    screen = setScreen(isFullScreen, (conf.w, conf.h))
     conf.w, conf.h = pygame.display.get_window_size()
     app = App()
     log.debug("init App with screen size [%s %s]", conf.w, conf.h)
@@ -26,7 +27,7 @@ def main():
                     w = mode[0]
                 if h < mode[1]:
                     h = mode[1]
-                screen = pygame.display.set_mode((w, h), pygame.RESIZABLE)
+                screen = setScreen(isFullScreen, (w, h))
                 conf.w, conf.h = pygame.display.get_window_size()
                 app.resize()
                 log.debug("App resized in width:%s height:%s", conf.w, conf.h)
@@ -35,6 +36,14 @@ def main():
                     if app.quitScene():
                         done = True
                         log.debug("quit from app")
+                elif e.key == pygame.K_F11:
+                    isFullScreen = not isFullScreen
+                    if isFullScreen:
+                        size = (0, 0)
+                    else:
+                        size = (conf.w, conf.h)
+                    screen = setScreen(isFullScreen, size)
+                    app.resize()
                 elif e.key == pygame.K_SPACE:
                     app.keyPressed()
         keyPressed = pygame.key.get_pressed()
@@ -47,6 +56,14 @@ def main():
         pygame.display.update()
         clock.tick(fps)
     pygame.quit()
+
+
+def setScreen(isFullScreen, size):
+    flags = pygame.NOFRAME | pygame.FULLSCREEN if isFullScreen else pygame.RESIZABLE
+    screen = pygame.display.set_mode(size, flags)
+    conf.w, conf.h = pygame.display.get_window_size()
+    log.debug("App in screen mode [%s, %s]", conf.w, conf.h)
+    return screen
 
 
 if __name__ == "__main__":
