@@ -1,4 +1,5 @@
 import datetime
+import random
 import pygame
 import conf
 from board import Board
@@ -13,7 +14,7 @@ class GameLogic:
         self.gameCount = count
         self.level = level
         self.lives = lives
-        self.board = Board()
+        self.board = Board(self.getArr())
 
     def start(self):
         self.inGame = True
@@ -85,7 +86,8 @@ class GameLogic:
                 self.moves.append(self.board.activeCellNr)
                 self.board.cellOff()
                 self.resetNewCellTimer()
-                self.board.setNewActiveCell()
+                if self.moveCount > 0:
+                    self.board.setNewActiveCell()
                 self.bgColor = conf.bgColor
                 self.lastTimeToNextCellCheck = self.getTick()
             if self.getTick()-self.beginNewCell < self.timeToNextCell:
@@ -138,3 +140,26 @@ class GameLogic:
 
     def resize(self):
         self.board.resize()
+
+    def getNextArr(self):
+        arr = []
+        while(len(arr) < self.getTotalMoves()):
+            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
+        return arr
+
+    def checkRandomRepition(self, arr):
+        count = 0
+        for i, v in enumerate(arr):
+            nextMove = i+self.level
+            if nextMove > len(arr)-1:
+                break
+            if v == arr[nextMove]:
+                count += 1
+        percent = int(100*count/len(arr))
+        return percent > conf.RR and percent < 80
+
+    def getArr(self):
+        arr = self.getNextArr()
+        while not self.checkRandomRepition(arr):
+            arr = self.getNextArr()
+        return arr

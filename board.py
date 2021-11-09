@@ -1,4 +1,3 @@
-import random
 import conf
 from cell import Cell
 from label import Label
@@ -7,7 +6,9 @@ from label import Label
 class Board:
     activeCellNr = None
 
-    def __init__(self) -> None:
+    def __init__(self, arr) -> None:
+        self.arr = arr
+        self.idx = 0
         w, h = int(conf.w*0.3), int(conf.h*0.08)
         self.lblLevel = Label("---", (0, 0), (w, h))
         self.lblMove = Label("---", (conf.w-w, 0), (w, h))
@@ -40,7 +41,11 @@ class Board:
 
     def setNewActiveCell(self):
         self.lastActiveCellNr = self.activeCellNr
-        self.activeCellNr = random.randint(0, len(self.field)-1)
+        self.getNextActiveCell()
+
+    def getNextActiveCell(self):
+        self.activeCellNr = self.arr[self.idx]
+        self.idx += 1
 
     def draw(self, screen):
         self.lblLevel.draw(screen)
