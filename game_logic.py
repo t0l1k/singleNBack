@@ -4,6 +4,7 @@ import pygame
 import conf
 from board import Board
 import logging as log
+import time
 from today_games_data import GameData
 
 
@@ -156,10 +157,22 @@ class GameLogic:
             if v == arr[nextMove]:
                 count += 1
         percent = int(100*count/len(arr))
-        return percent > conf.RR and percent < 80
+        return percent > conf.RR and percent < 80, percent
 
     def getArr(self):
-        arr = self.getNextArr()
-        while not self.checkRandomRepition(arr):
+        pause = conf.timeoutRR
+        start = time.monotonic()
+        count = 0
+        check = False
+        max = 0
+        best = []
+        while count < 100000 and time.monotonic()-start < pause and not check:
             arr = self.getNextArr()
+            check, percent = self.checkRandomRepition(arr)
+            if percent > max:
+                max = percent
+                best = arr
+            count += 1
+        if count > 1000:
+            return best
         return arr
