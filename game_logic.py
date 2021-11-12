@@ -173,7 +173,8 @@ class GameLogic:
                 max = percent
                 best = arr
             count += 1
-        log.info("Select game with RR:%s", max)
-        if count > 1000:
+        if not check:
+            log.info("Game selected with RR:%s", max)
             return best
+        log.info("Game selected with RR:%s", percent)
         return arr
