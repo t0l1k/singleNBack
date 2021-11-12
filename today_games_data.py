@@ -69,7 +69,7 @@ def calculateNextLevel():
     level = getLevelFromGame(getGameCount())
     lives = getLivesFromGame(getGameCount())
     extraTry = False
-    if percent > conf.nextLevelPercent and not conf.manualMode:
+    if percent >= conf.nextLevelPercent and not conf.manualMode:
         level += 1
         lives = conf.lives
     elif percent < conf.dropLevelPercent and not conf.manualMode:

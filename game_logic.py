@@ -1,8 +1,10 @@
 import datetime
+import random
 import pygame
 import conf
 from board import Board
 import logging as log
+import time
 from today_games_data import GameData
 
 
@@ -13,7 +15,7 @@ class GameLogic:
         self.gameCount = count
         self.level = level
         self.lives = lives
-        self.board = Board()
+        self.board = Board(self.getArr())
 
     def start(self):
         self.inGame = True
@@ -85,7 +87,8 @@ class GameLogic:
                 self.moves.append(self.board.activeCellNr)
                 self.board.cellOff()
                 self.resetNewCellTimer()
-                self.board.setNewActiveCell()
+                if self.moveCount > 0:
+                    self.board.setNewActiveCell()
                 self.bgColor = conf.bgColor
                 self.lastTimeToNextCellCheck = self.getTick()
             if self.getTick()-self.beginNewCell < self.timeToNextCell:
@@ -138,3 +141,40 @@ class GameLogic:
 
     def resize(self):
         self.board.resize()
+
+    def getNextArr(self):
+        arr = []
+        while(len(arr) < self.getTotalMoves()):
+            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
+        return arr
+
+    def checkRandomRepition(self, arr):
+        count = 0
+        for i, v in enumerate(arr):
+            nextMove = i+self.level
+            if nextMove > len(arr)-1:
+                break
+            if v == arr[nextMove]:
+                count += 1
+        percent = int(100*count/len(arr))
+        return percent > conf.RR and percent < 80, percent
+
+    def getArr(self):
+        pause = conf.timeoutRR
+        start = time.monotonic()
+        count = 0
+        check = False
+        max = 0
+        best = []
+        while count < 100000 and time.monotonic()-start < pause and not check:
+            arr = self.getNextArr()
+            check, percent = self.checkRandomRepition(arr)
+            if percent > max:
+                max = percent
+                best = arr
+            count += 1
+        if not check:
+            log.info("Game selected with RR:%s", max)
+            return best
+        log.info("Game selected with RR:%s", percent)
+        return arr
