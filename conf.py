@@ -15,6 +15,8 @@ autoToNextLevel = False  # начать следующий уровень пос
 RR = 30  # минимальный процент повтора random repition
 timeoutRR = 3  # сколько выделить секунд на генерацию RR
 
+feedbackOnPreviousMove = True
+
 fieldSize = 3  # ячеек на поле игры 2 и более, 3 классика
 
 w, h = 800, 600  # размер окна при старте приложения
