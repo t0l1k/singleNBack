@@ -18,8 +18,10 @@ def parseGamesData():
     y = []
     for k, v in get():
         if v.isDone:
-            x.append(v.dateEnd)
             result = v.percent*0.01+v.level
+            x.append(v.dateBegin)
+            y.append(v.level)
+            x.append(v.dateEnd)
             y.append(result)
     return (x, y)
 
