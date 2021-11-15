@@ -26,7 +26,7 @@ class ResultView:
             y = idx//self.rows
             l = Label(s[idx], (x*boxWidth, y*boxHeight),
                       (boxWidth, boxHeight))
-            if today_games_data.getPercentFromGame(idx) > conf.nextLevelPercent:
+            if today_games_data.getPercentFromGame(idx) >= conf.nextLevelPercent:
                 l.setBgColor(conf.regularColor)
             elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):
                 l.setBgColor(conf.warningColor)

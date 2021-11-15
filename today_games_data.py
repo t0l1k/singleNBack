@@ -1,7 +1,19 @@
-from datetime import timedelta
+import os
+import pickle
 import conf
 import logging as log
+from datetime import datetime
 from gamedata import GameData
+from scene_game_timer import Timer
+
+
+def getTodayResults():
+    return "{} Игр:{} Max:{} Avg:{} Игровое время:{}".format(
+        datetime.now().strftime("%Y.%m.%d"),
+        getLastDoneGame(),
+        getMaxLevel(),
+        getAverage(),
+        getTimer())
 
 
 def getDoneLevelsStr():
@@ -51,6 +63,7 @@ def setDataDoneGame(data):
         setExtraTry(getGameCount())
     setNewGameCount()
     newGame(level, lives)
+    saveGame()
 
 
 def calculateNextLevel():
@@ -166,6 +179,88 @@ def getGameDurationStr(nr):
     return result
 
 
+def getTodayGamesPath():
+    return os.path.join("res", "games.pickle")
+
+
+def getHistoryPath():
+    return os.path.join("res", "history.txt")
+
+
+def saveGame():
+    with open(getTodayGamesPath(), 'wb') as file:
+        pickle.dump(__todayGamesData, file)
+        pickle.dump(getTimer(), file)
+    log.info("Сохранили новую запись последней игры.")
+
+
+def saveHistory(day):
+    s = "{} Игр:{} Max:{} Avg:{} Игровое время:{}".format(
+        day,
+        getLastDoneGame(),
+        getMaxLevel(),
+        getAverage(),
+        getTimer())
+    with open(getHistoryPath(), 'a') as file:
+        file.write(s)
+    os.rename(getTodayGamesPath(), os.path.join("res", day+'.pickle'))
+    log.info("Сохранили результаты за %s в файл истории игр.", day)
+
+
+def loadData():
+    try:
+        with open(getTodayGamesPath(), 'rb') as file:
+            allData = pickle.load(file)
+            timer = pickle.load(file)
+            todayStr = datetime.now().strftime("%Y%m%d")
+            testDateStr = allData[0].dateBegin.strftime("%Y%m%d")
+            if todayStr == testDateStr:
+                log.info("Загрузили все данные игр")
+                parseTodayGames(allData, timer)
+            else:
+                parseTodayGames(allData, timer)
+                saveHistory(testDateStr)
+                reset()
+                log.info(
+                    "Обнулить список игр за сегодня, сохранить вчерашние игры в историю.")
+    except FileNotFoundError:
+        setTimer(None)
+        log.info("Первый запуск!")
+
+
+def parseTodayGames(allData, timer):
+    global __todayGamesData, __count
+    __todayGamesData = allData
+    __count = len(allData)-1
+    setTimer(timer)
+    log.info("Восстановили игры за сегодня.")
+
+
+def getTimer():
+    global __timer
+    if __timer is None:
+        __timer = Timer()
+        __timer.start()
+    return __timer
+
+
+def setTimer(timer):
+    global __timer
+    if timer is None:
+        __timer = Timer()
+        __timer.start()
+        return
+    __timer = timer
+
+
+def reset():
+    global __todayGamesData, __count
+    setTimer(None)
+    __count = 0
+    __todayGamesData = {}
+
+
 #####
+__timer = None
 __count = 0
 __todayGamesData = {}  # GameData

@@ -15,12 +15,11 @@ class SceneToday:
         self.lblName = Label("Игры сегодня", (0, 0), (1, 1))
         self.lblTodayGames = Label("Игры за сегодня", (0, 0), (1, 1))
         self.resultsView = ResultView((0, 0), (1, 1))
+        self.getStatistic()
         self.resize()
 
-    def getGames(self):
-        # вычисляет средний уровень и выводит список игр и результаты
-        s = "Pos: Игр:{} Max:{} Avg:{} Игровое время:{}".format(
-            today_games_data.getLastDoneGame(), today_games_data.getMaxLevel(), today_games_data.getAverage(), self.app.sceneGame.sessionTimer)
+    def getStatistic(self):
+        s = today_games_data.getTodayResults()
         log.debug(s)
         self.lblTodayGames.setText(s)
         for k, v in today_games_data.get():
@@ -40,7 +39,7 @@ class SceneToday:
 
     def setScene(self, next):
         self.next = next
-        self.getGames()
+        self.getStatistic()
 
     def update(self):
         self.resultsView.update()
