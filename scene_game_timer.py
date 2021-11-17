@@ -35,8 +35,8 @@ class Timer:
         log.info("Pause timer at %s", self.duration)
 
     def __str__(self) -> str:
-        return "{:>02}:{:>02}".format(
-            self.duration//1000//60, self.duration//1000 % 60)
+        return "{:>02}:{:>02}.{:>03}".format(
+            self.duration//1000//60, self.duration//1000 % 60, self.duration % 1000)
 
     def getTick(self):
         return pygame.time.get_ticks()

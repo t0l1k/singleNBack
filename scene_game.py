@@ -4,15 +4,13 @@ import logging as log
 from game_logic import GameLogic
 from games_result import GameResults
 from label import Label
-from scene_game_timer import Timer
 
 
 class SceneGame:
     def __init__(self, app) -> None:
         self.app = app
         self.next = app.sceneToday
-        self.sessionTimer = Timer()
-        self.sessionTimer.start()
+        self.sessionTimer = today_games_data.getTimer()
         self.setupTimerLabel()
         self.game = None
 
@@ -73,7 +71,8 @@ class SceneGame:
         if self.game.inGame:
             self.game.keyPressed()
         elif self.gameResults.inGame:
-            if self.gameResults.keyPressed():  # запустить новую игру
+            if self.gameResults.keyPressed():
+                log.debug("запустить новую игру")
                 self.gameResults.inGame = False
                 self.startNewGame()
 

@@ -49,7 +49,8 @@ class GameLogic:
 
     def keyPressed(self):
         self.pressed = True
-        self.bgColor = conf.regularColor
+        if conf.feedbackOnPreviousMove:
+            self.bgColor = conf.regularColor
 
     def checkLastMove(self):
         if len(self.moves) > self.level:
@@ -61,19 +62,23 @@ class GameLogic:
                 # есть повтор n-шагов назад
                 if self.pressed:  # правильный ответ
                     self.countCorrect += 1
-                    self.bgColor = conf.correctColor
+                    if conf.feedbackOnPreviousMove:
+                        self.bgColor = conf.correctColor
                     log.debug("правильный ответ")
                 else:  # пропустили правильный ответ
                     self.countWrong += 1
-                    self.bgColor = conf.errorColor
+                    if conf.feedbackOnPreviousMove:
+                        self.bgColor = conf.errorColor
                     log.debug("пропустили ответ")
             elif self.pressed:  # определен повтор неправильно
                 self.countWrong += 1
-                self.bgColor = conf.warningColor
+                if conf.feedbackOnPreviousMove:
+                    self.bgColor = conf.warningColor
                 log.debug("не было повтора")
         elif self.pressed:  # еще не могло быть повтора
             self.countWrong += 1
-            self.bgColor = conf.warningColor
+            if conf.feedbackOnPreviousMove:
+                self.bgColor = conf.warningColor
             log.debug("не было повтора")
         if self.countWrong > 0 and conf.resetLevelOnFirstWrong:
             self.resetLevel = True
@@ -89,7 +94,8 @@ class GameLogic:
                 self.resetNewCellTimer()
                 if self.moveCount > 0:
                     self.board.setNewActiveCell()
-                self.bgColor = conf.bgColor
+                if conf.feedbackOnPreviousMove:
+                    self.bgColor = conf.bgColor
                 self.lastTimeToNextCellCheck = self.getTick()
             if self.getTick()-self.beginNewCell < self.timeToNextCell:
                 # во время показа новой иконки

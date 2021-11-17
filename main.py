@@ -1,4 +1,5 @@
 import pygame
+import today_games_data
 import conf
 from app import App
 import logging as log
@@ -41,9 +42,12 @@ def main():
                     if isFullScreen:
                         size = (0, 0)
                     else:
-                        size = (conf.w, conf.h)
+                        size = (800, 600)
                     screen = setScreen(isFullScreen, size)
+                    conf.w, conf.h = pygame.display.get_window_size()
                     app.resize()
+                elif e.key == pygame.K_p:
+                    app.sceneToday.resultsView.plot = not app.sceneToday.resultsView.plot
                 elif e.key == pygame.K_SPACE:
                     app.keyPressed()
         keyPressed = pygame.key.get_pressed()
@@ -71,4 +75,5 @@ if __name__ == "__main__":
         level=log.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[log.StreamHandler()])
+    today_games_data.loadData()
     main()

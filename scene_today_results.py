@@ -10,13 +10,13 @@ from label import Label
 
 
 class ResultView:
-    def __init__(self, pos, size, boxHeight=20, rows=3, plot=True) -> None:
+    def __init__(self, pos, size, boxHeight=20, rows=3, plot=False) -> None:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.boxHeight = boxHeight
         self.rows = rows
         self.rect = self.image.get_rect()
-        self.plot = plot
+        self._plot = plot
         self.createImage()
 
     def createImage(self):
@@ -37,7 +37,7 @@ class ResultView:
                 y = idx//self.rows
                 l = Label(s[idx], (x*boxWidth, y*boxHeight),
                           (boxWidth, boxHeight))
-                if today_games_data.getPercentFromGame(idx) > conf.nextLevelPercent:
+                if today_games_data.getPercentFromGame(idx) >= conf.nextLevelPercent:
                     l.setBgColor(conf.regularColor)
                 elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):
                     l.setBgColor(conf.warningColor)
@@ -70,6 +70,15 @@ class ResultView:
         self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
         self.createImage()
+
+    @property
+    def plot(self):
+        return self._plot
+
+    @plot.setter
+    def plot(self, value):
+        self._plot = value
+        self.dirty = True
 
 
 def getHeihtForSurface(hH, rows):
