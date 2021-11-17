@@ -202,7 +202,7 @@ def saveHistory(day):
         getAverage(),
         getTimer())
     with open(getHistoryPath(), 'a') as file:
-        file.write(s)
+        file.write("\n"+s)
     os.rename(getTodayGamesPath(), os.path.join("res", day+'.pickle'))
     log.info("Сохранили результаты за %s в файл истории игр.", day)
 
