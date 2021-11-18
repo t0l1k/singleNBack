@@ -60,7 +60,9 @@ def getMaxLevel():
 
 
 def getCurrentToday():
-    return __todayGamesData[0].dateBegin.strftime("%Y.%m.%d")
+    if len(__todayGamesData) > 0:
+        return __todayGamesData[0].dateBegin.strftime("%Y.%m.%d")
+    return datetime.now().strftime("%Y%m%d")
 
 
 def getAverage():
@@ -199,6 +201,8 @@ def getGameDurationStr(nr):
 
 def getTodayGamesPath():
     todayStr = datetime.now().strftime("%Y%m%d")
+    if not os.path.isdir("res"):
+        os.makedirs("res")
     return os.path.join("res", todayStr+".pickle")
 
 
