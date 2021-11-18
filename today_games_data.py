@@ -199,6 +199,8 @@ def getGameDurationStr(nr):
 
 def getTodayGamesPath():
     todayStr = datetime.now().strftime("%Y%m%d")
+    if not os.path.isdir("res"):
+        os.makedirs("res")
     return os.path.join("res", todayStr+".pickle")
 
 
