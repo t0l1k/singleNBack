@@ -48,6 +48,11 @@ def main():
                     app.resize()
                 elif e.key == pygame.K_p:
                     app.sceneToday.resultsView.plot = not app.sceneToday.resultsView.plot
+                    log.info("Сменили вид представления результатов за сегодня.")
+                elif e.key == pygame.K_LEFT:
+                    app.keyTurnLeft()
+                elif e.key == pygame.K_RIGHT:
+                    app.keyTurnRight()
                 elif e.key == pygame.K_SPACE:
                     app.keyPressed()
         keyPressed = pygame.key.get_pressed()

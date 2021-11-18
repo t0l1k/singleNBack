@@ -15,6 +15,8 @@ class SceneToday:
         self.lblName = Label("Игры сегодня", (0, 0), (1, 1))
         self.lblTodayGames = Label("Игры за сегодня", (0, 0), (1, 1))
         self.resultsView = ResultView((0, 0), (100, 100))
+        self.historyIndex = 0
+        self.historyLenght = 0
         self.getStatistic()
         self.resize()
 
@@ -50,7 +52,29 @@ class SceneToday:
         self.lblTodayGames.draw(screen)
         self.resultsView.draw(screen)
 
+    def keyTurnLeft(self):
+        if self.historyLenght > self.historyIndex+1:
+            self.historyIndex += 1
+        if self.historyIndex >= 0:
+            self.historyLenght = today_games_data.readHistory(
+                self.historyIndex)
+        self.getStatistic()
+        log.info("Выбрали дату назад %s", self.historyIndex)
+
+    def keyTurnRight(self):
+        if self.historyIndex >= 0 and self.historyLenght > 0:
+            self.historyIndex -= 1
+        if self.historyIndex >= 0:
+            self.historyLenght = today_games_data.readHistory(
+                self.historyIndex)
+        else:
+            today_games_data.loadData()
+        self.getStatistic()
+        log.info("Выбрали дату вперед %s", self.historyIndex)
+
     def keyPressed(self):
+        if today_games_data.useHistory:
+            today_games_data.loadData()
         self.app.setSceneGame()
 
     def quit(self):

@@ -32,6 +32,12 @@ class App:
     def keyDown(self):
         self.currentScene.keyDown()
 
+    def keyTurnLeft(self):
+        self.currentScene.keyTurnLeft()
+
+    def keyTurnRight(self):
+        self.currentScene.keyTurnRight()
+
     def keyPressed(self):
         self.currentScene.keyPressed()
 

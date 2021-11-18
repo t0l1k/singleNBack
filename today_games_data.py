@@ -9,7 +9,7 @@ from scene_game_timer import Timer
 
 def getTodayResults():
     return "{} Игр:{} Max:{} Avg:{} Игровое время:{}".format(
-        datetime.now().strftime("%Y.%m.%d"),
+        getCurrentToday(),
         getLastDoneGame(),
         getMaxLevel(),
         getAverage(),
@@ -59,6 +59,10 @@ def getMaxLevel():
     return max
 
 
+def getCurrentToday():
+    return __todayGamesData[0].dateBegin.strftime("%Y.%m.%d")
+
+
 def getAverage():
     sum = 0
     for k, v in get():
@@ -69,6 +73,8 @@ def getAverage():
 
 def setDataDoneGame(data):
     # получить результаты завершенной игры и сделать новую запись для следующей игры
+    if useHistory:
+        loadData()
     add(data)
     level, lives, extraTry = calculateNextLevel()
     if extraTry:
@@ -192,7 +198,8 @@ def getGameDurationStr(nr):
 
 
 def getTodayGamesPath():
-    return os.path.join("res", "games.pickle")
+    todayStr = datetime.now().strftime("%Y%m%d")
+    return os.path.join("res", todayStr+".pickle")
 
 
 def getHistoryPath():
@@ -219,7 +226,31 @@ def saveHistory(day):
     log.info("Сохранили результаты за %s в файл истории игр.", day)
 
 
+def getHistoryGamesPath(day):
+    return os.path.join("res", day+".pickle")
+
+
+def readHistory(index):
+    global useHistory
+    contents = None
+    with open(getHistoryPath(), 'r') as f:
+        contents = f.readlines()
+    idx = len(contents)-index-1
+    if idx > len(contents):
+        idx = len(contents)
+    filename = contents[idx][:8]
+    filePath = getHistoryGamesPath(filename)
+    print(index, idx, filename, filePath)
+    useHistory = True
+    with open(filePath, 'rb')as file:
+        allData = pickle.load(file)
+        timer = pickle.load(file)
+        parseTodayGames(allData, timer)
+    return len(contents)
+
+
 def loadData():
+    global useHistory
     try:
         with open(getTodayGamesPath(), 'rb') as file:
             allData = pickle.load(file)
@@ -227,7 +258,7 @@ def loadData():
             todayStr = datetime.now().strftime("%Y%m%d")
             testDateStr = allData[0].dateBegin.strftime("%Y%m%d")
             if todayStr == testDateStr:
-                log.info("Загрузили все данные игр")
+                log.info("Загрузили все данные игр за сегодня.")
                 parseTodayGames(allData, timer)
             else:
                 parseTodayGames(allData, timer)
@@ -236,8 +267,10 @@ def loadData():
                 log.info(
                     "Обнулить список игр за сегодня, сохранить вчерашние игры в историю.")
     except FileNotFoundError:
-        setTimer(None)
+        reset()
         log.info("Первый запуск!")
+    finally:
+        useHistory = False
 
 
 def parseTodayGames(allData, timer):
@@ -272,7 +305,19 @@ def reset():
     __todayGamesData = {}
 
 
+@property
+def useHistory():
+    return __useHistory
+
+
+@useHistory.setter
+def useHistory(value):
+    global __useHistory
+    __useHistory = value
+
+
 #####
 __timer = None
 __count = 0
 __todayGamesData = {}  # GameData
+__useHistory = False

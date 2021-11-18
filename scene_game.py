@@ -67,6 +67,12 @@ class SceneGame:
     def keyDown(self):
         pass
 
+    def keyTurnLeft(self):
+        pass
+
+    def keyTurnRight(self):
+        pass
+
     def keyPressed(self):
         if self.game.inGame:
             self.game.keyPressed()
