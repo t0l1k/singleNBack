@@ -93,6 +93,7 @@ class SceneGame:
         self.sessionTimer.pause()
         if self.gameResults.quit():
             self.app.setSceneToday()
+            today_games_data.saveGame()
         return False
 
     def resize(self):

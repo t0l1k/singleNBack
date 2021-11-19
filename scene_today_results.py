@@ -26,9 +26,10 @@ class ResultView:
             self.image = createPlot(dpi, data)
         else:
             self.board = pygame.Surface(
-                (self.rect.w, getHeihtForSurface(self.rect.h, self.rows)[0]))
+                (self.rect.w, getHeihtForSurface(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
             self.board_rect = self.board.get_rect()
-            self.board.fill(conf.cellActiveColor)
+            pygame.draw.rect(self.board, conf.cellActiveColor,
+                             self.rect, border_radius=8)
             boxWidth = self.rect.w//self.rows
             boxHeight = getHeihtForSurface(self.rect.h, self.rows)[1]
             s = today_games_data.getDoneLevelsStr()
