@@ -52,15 +52,15 @@ white = (252, 252, 252)
 # warningColor = orange  # цвет ошибочного предположения
 
 # # theme 1
-# bgColor = black1
-# fgColor = white
-# cellBgColor = bgColor
-# cellFgColor = fgColor
-# cellActiveColor = green1
-# regularColor = blue
-# correctColor = green1
-# errorColor = red
-# warningColor = orange
+bgColor = black1
+fgColor = white
+cellBgColor = bgColor
+cellFgColor = fgColor
+cellActiveColor = green1
+regularColor = blue
+correctColor = green1
+errorColor = red
+warningColor = orange
 
 # theme 2
 # bgColor = (49, 119, 108)
@@ -74,12 +74,12 @@ white = (252, 252, 252)
 # warningColor = orange
 
 # theme orig
-bgColor = gray2  # цвет фона окна
-fgColor = black  # цвет текста в окне
-cellBgColor = black  # цвет фона поля ячейки
-cellFgColor = aqua  # цвет полос поля ячейки
-cellActiveColor = yellowGreen  # цвет показа ячейки
-regularColor = blue2  # цвет отклика пользователя
-correctColor = green2  # цвет правильного ответа
-errorColor = red2  # цвет пропуска отметить повтор
-warningColor = brown  # цвет ошибочного предположения
+# bgColor = gray2  # цвет фона окна
+# fgColor = black  # цвет текста в окне
+# cellBgColor = black  # цвет фона поля ячейки
+# cellFgColor = aqua  # цвет полос поля ячейки
+# cellActiveColor = yellowGreen  # цвет показа ячейки
+# regularColor = blue2  # цвет отклика пользователя
+# correctColor = green2  # цвет правильного ответа
+# errorColor = red2  # цвет пропуска отметить повтор
+# warningColor = brown  # цвет ошибочного предположения

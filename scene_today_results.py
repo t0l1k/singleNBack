@@ -103,18 +103,43 @@ def getHeihtForSurface(hH, rows):
 def createPlot(dpi, data):
     matplotlib.use("Agg")
     plt.rcParams.update({
-        "lines.marker": "o",
-        "font.size": 8.0
+        "lines.marker": "",
+        "font.size": 8.0,
+        "text.color": "white",
+        "axes.facecolor": "grey",
+        "axes.labelcolor": "green",
+        "axes.edgecolor": "red",
+        "axes.grid": "True",
+        "grid.linestyle": ":",
+        "xtick.color": "darkgrey",
+        "ytick.color": "darkgrey",
+        "grid.color": "darkgrey",
+        "figure.facecolor": "grey",
+        "figure.edgecolor": "grey",
     })
 
     fig = pylab.figure(figsize=[4, 3], dpi=dpi)
     fig.patch.set_alpha(0.1)
     ax = fig.gca()
     ax.grid(True)
-    x, y = data
-    fig.autofmt_xdate()
-
+    x, y, c = data
     ax.plot(x, y)
+    fig.autofmt_xdate()
+    for i, color in enumerate(c):
+        if color == "win":
+            col = "blue"
+            mark = "^"
+        elif color == "lost":
+            col = "red"
+            mark = "v"
+        elif color == "regular":
+            col = "green"
+            mark = "*"
+        elif color == "extra try":
+            col = "orange"
+            mark = "."
+        plt.plot(x[i], y[i], mark, color=col)
+    plt.show()
     canvas = agg.FigureCanvasAgg(fig)
     canvas.draw()
     renderer = canvas.get_renderer()

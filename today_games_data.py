@@ -29,12 +29,22 @@ def parseGamesData():
     # данные для графика
     x = []
     y = []
+    c = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
             x.append(k)
             y.append(result)
-    return (x, y)
+            if getPercentFromGame(k) >= conf.nextLevelPercent:
+                c.append("win")
+            elif getPercentFromGame(k) < conf.dropLevelPercent and useExtraTry(k):
+                c.append("extra try")
+            elif getPercentFromGame(k) < conf.dropLevelPercent and not useExtraTry(k):
+                c.append("lost")
+            else:
+                c.append("regular")
+    print(x, y, c)
+    return (x, y, c)
 
 
 def getDoneGamesStr():
