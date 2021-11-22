@@ -7,11 +7,9 @@ class Timer:
         self.running = True
         self.paused = False
         self.startTime = 0
-
-    def start(self):
-        log.info("Start timer")
         if self.running:
             self.duration = 0
+        log.info("Start timer")
 
     def reset(self):
         if self.paused:
@@ -40,3 +38,7 @@ class Timer:
 
     def getTick(self):
         return pygame.time.get_ticks()
+
+
+instance = Timer()
+log.info("Установили таймера новый экземпляр. %s", instance)

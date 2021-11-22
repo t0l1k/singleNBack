@@ -2,7 +2,6 @@ import matplotlib
 import pylab
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
-
 import pygame
 import conf
 import today_games_data
@@ -22,8 +21,10 @@ class ResultView:
     def createImage(self):
         if self.plot:
             data = today_games_data.parseGamesData()
-            dpi = self.rect.h*100/300
-            self.image = createPlot(dpi, data)
+            size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
+            dpi = size*100/300
+            a, b = (4, 3) if self.rect.w > self.rect.h else (3, 3)
+            self.image = createPlot(dpi, data, a, b)
         else:
             self.board = pygame.Surface(
                 (self.rect.w, getHeihtForSurface(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
@@ -100,7 +101,7 @@ def getHeihtForSurface(hH, rows):
     return (hSurf, boxHeight)
 
 
-def createPlot(dpi, data):
+def createPlot(dpi, data, w, h):
     matplotlib.use("Agg")
     plt.rcParams.update({
         "lines.marker": "",
@@ -117,8 +118,7 @@ def createPlot(dpi, data):
         "figure.facecolor": "grey",
         "figure.edgecolor": "grey",
     })
-
-    fig = pylab.figure(figsize=[4, 3], dpi=dpi)
+    fig = pylab.figure(figsize=[w, h], dpi=dpi)
     fig.patch.set_alpha(0.1)
     ax = fig.gca()
     ax.grid(True)

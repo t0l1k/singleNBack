@@ -4,7 +4,7 @@ import conf
 import logging as log
 from datetime import datetime
 from gamedata import GameData
-from scene_game_timer import Timer
+import scene_game_timer
 
 
 def getTodayResults():
@@ -43,7 +43,6 @@ def parseGamesData():
                 c.append("lost")
             else:
                 c.append("regular")
-    print(x, y, c)
     return (x, y, c)
 
 
@@ -220,10 +219,11 @@ def getHistoryPath():
 
 
 def saveGame():
-    with open(getTodayGamesPath(), 'wb') as file:
-        pickle.dump(__todayGamesData, file)
-        pickle.dump(getTimer(), file)
-    log.info("Сохранили новую запись последней игры.")
+    if len(__todayGamesData) > 0:
+        with open(getTodayGamesPath(), 'wb') as file:
+            pickle.dump(__todayGamesData, file)
+            pickle.dump(getTimer(), file)
+        log.info("Сохранили новую запись последней игры.")
 
 
 def saveHistory(day):
@@ -261,7 +261,6 @@ def readHistory(index):
     except FileNotFoundError:
         return 0
     useHistory = True
-    print(index, idx, filename, filePath)
     return len(contents)
 
 
@@ -286,37 +285,20 @@ def loadData():
         log.info("Первый запуск!")
 
 
+def getTimer():
+    return scene_game_timer.instance
+
+
 def parseTodayGames(allData, timer):
     global __todayGamesData, __count
     __todayGamesData = allData
     __count = len(allData)-1
-    setTimer(timer)
+    scene_game_timer.instance == timer
     log.info("Восстановили игры за сегодня.")
-
-
-def getTimer():
-    global __timer
-    if __timer is None:
-        __timer = Timer()
-        __timer.start()
-        log.info("Запустили таймер.")
-    return __timer
-
-
-def setTimer(timer):
-    global __timer
-    if timer is None:
-        __timer = Timer()
-        __timer.start()
-        log.info("Запустили таймера новый экземпляр.")
-        return
-    log.info("Запустили таймера старый экземпляр.")
-    __timer = timer
 
 
 def reset():
     global __todayGamesData, __count, __useHistory
-    setTimer(None)
     __count = 0
     __todayGamesData = {}
     __useHistory = False
@@ -334,7 +316,6 @@ def useHistory(value):
 
 
 #####
-__timer = None
 __count = 0
 __todayGamesData = {}  # GameData
 __useHistory = False
