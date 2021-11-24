@@ -105,7 +105,7 @@ def createPlot(dpi, data, w, h):
     matplotlib.use("Agg")
     plt.rcParams.update({
         "lines.marker": "",
-        "font.size": 8.0,
+        "font.size": 5,
         "text.color": "white",
         "axes.facecolor": "grey",
         "axes.labelcolor": "green",
@@ -122,7 +122,7 @@ def createPlot(dpi, data, w, h):
     fig.patch.set_alpha(0.1)
     ax = fig.gca()
     ax.grid(True)
-    x, y, c = data
+    x, y, c, percent = data
     ax.plot(x, y)
     fig.autofmt_xdate()
     for i, color in enumerate(c):
@@ -139,6 +139,8 @@ def createPlot(dpi, data, w, h):
             col = "orange"
             mark = "."
         plt.plot(x[i], y[i], mark, color=col)
+        plt.text(x[i], y[i], percent[i], ha='center',
+                 va='center')
     plt.show()
     canvas = agg.FigureCanvasAgg(fig)
     canvas.draw()

@@ -13,7 +13,24 @@ def getTodayResults():
         getLastDoneGame(),
         getMaxLevel(),
         getAverage(),
-        getTimer())
+        countPlayTime())
+
+
+def countPlayTime():
+    t0 = 0  # всего миллисекунд
+    for _, v in get():
+        if v.isDone:
+            t3 = 0  # дополнительное время при дополнительной попытке
+            l = conf.lives - v.lives
+            if l > 0:
+                t3 = conf.incDurrationStep*l
+            t1 = conf.timeToNextCell+t3
+            t2 = conf.timeShowCell+t3
+            t0 += t1 * v.moves + t2 / 2
+    t0 = round(t0)
+    s = "{:>02}:{:>02}.{:>03}".format(
+        t0//1000//60, t0//1000 % 60, t0 % 1000)
+    return s
 
 
 def getDoneLevelsStr():
@@ -29,21 +46,23 @@ def parseGamesData():
     # данные для графика
     x = []
     y = []
-    c = []
+    color = []
+    percent = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
             x.append(k)
             y.append(result)
             if getPercentFromGame(k) >= conf.nextLevelPercent:
-                c.append("win")
+                color.append("win")
             elif getPercentFromGame(k) < conf.dropLevelPercent and useExtraTry(k):
-                c.append("extra try")
+                color.append("extra try")
             elif getPercentFromGame(k) < conf.dropLevelPercent and not useExtraTry(k):
-                c.append("lost")
+                color.append("lost")
             else:
-                c.append("regular")
-    return (x, y, c)
+                color.append("regular")
+            percent.append(v.percent)
+    return (x, y, color, percent)
 
 
 def getDoneGamesStr():
@@ -232,7 +251,7 @@ def saveHistory(day):
         getLastDoneGame(),
         getMaxLevel(),
         getAverage(),
-        getTimer())
+        countPlayTime())
     with open(getHistoryPath(), 'a') as file:
         file.write("\n"+s)
     os.rename(getTodayGamesPath(), os.path.join("res", day+'.pickle'))
