@@ -27,12 +27,12 @@ class ResultView:
             self.image = createPlot(dpi, data, a, b)
         else:
             self.board = pygame.Surface(
-                (self.rect.w, getHeihtForSurface(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
+                (self.rect.w, getLabelHeiht(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
             self.board_rect = self.board.get_rect()
             pygame.draw.rect(self.board, conf.cellActiveColor,
                              self.rect, border_radius=8)
             boxWidth = self.rect.w//self.rows
-            boxHeight = getHeihtForSurface(self.rect.h, self.rows)[1]
+            boxHeight = getLabelHeiht(self.rect.h, self.rows)[1]
             s = today_games_data.getDoneLevelsStr()
             for idx, _ in enumerate(s):
                 x = idx % self.rows
@@ -53,11 +53,11 @@ class ResultView:
         self.dirty = False
 
     def keyUp(self):
-        self.rect.y += -10
+        self.rect.y += -self.boxHeight*2
         self.dirty = True
 
     def keyDown(self):
-        self.rect.y -= -10
+        self.rect.y -= -self.boxHeight*2
         self.dirty = True
 
     def update(self):
@@ -83,10 +83,10 @@ class ResultView:
         self.dirty = True
 
 
-def getHeihtForSurface(hH, rows):
+def getLabelHeiht(hH, rows):
     lenght = today_games_data.getLastDoneGame(
     ) if today_games_data.getLastDoneGame()/rows > 0 else 1
-    size = conf.w*0.05
+    size = hH*0.1
     boxHeight = size
     hSurf = boxHeight*lenght
     if boxHeight*lenght < hH:

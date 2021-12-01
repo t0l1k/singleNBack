@@ -80,5 +80,6 @@ if __name__ == "__main__":
         level=log.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[log.StreamHandler()])
+    log.getLogger().setLevel(log.DEBUG)
     today_games_data.loadData()
     main()
