@@ -1,4 +1,5 @@
 import logging as log
+from scene_score import SceneScore
 from scene_today import SceneToday
 from scene_game import SceneGame
 
@@ -7,6 +8,7 @@ class App:
     def __init__(self) -> None:
         self.sceneToday = SceneToday(self)
         self.sceneGame = SceneGame(self)
+        self.sceneScore = SceneScore(self)
         self.currentScene = self.sceneToday
         self.setSceneToday()
 
@@ -19,6 +21,11 @@ class App:
         self.sceneGame.setScene(self.sceneToday)
         self.currentScene = self.sceneGame
         log.info("set Scene Game")
+
+    def setSceneScore(self):
+        self.sceneToday.setScene(self.sceneToday)
+        self.currentScene = self.sceneScore
+        log.info("set Scene Score")
 
     def update(self):
         self.currentScene.update()
@@ -38,6 +45,9 @@ class App:
     def keyTurnRight(self):
         self.currentScene.keyTurnRight()
 
+    def keyS(self):
+        self.currentScene.keyS()
+
     def keyPressed(self):
         self.currentScene.keyPressed()
 
@@ -52,3 +62,4 @@ class App:
     def resize(self):
         self.sceneToday.resize()
         self.sceneGame.resize()
+        self.sceneScore.resize()

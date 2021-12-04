@@ -43,7 +43,7 @@ def getDoneLevelsStr():
 
 
 def parseGamesData():
-    # данные для графика
+    # данные для графика игр за сегодня
     x = []
     y = []
     color = []
@@ -63,6 +63,27 @@ def parseGamesData():
                 color.append("regular")
             percent.append(v.percent)
     return (x, y, color, percent)
+
+
+def parseHistoryForPlot():
+    # данные для графика результаты за весь период
+    dt = []  # date results
+    mx = []  # max results
+    av = []  # average results
+    try:
+        with open(getHistoryPath(), 'r') as f:
+            contents = f.readlines()
+        for i, s in enumerate(contents):
+            s = s.split()
+            date = datetime.strptime(s[0], "%Y%m%d")
+            max = s[2].split(":")[1]
+            avg = s[3].split(":")[1]
+            dt.append(date)
+            mx.append(int(max))
+            av.append(float(avg))
+    except FileNotFoundError:
+        return None, None, None
+    return dt, mx, av
 
 
 def getDoneGamesStr():
@@ -271,7 +292,7 @@ def readHistory(index):
         idx = len(contents)-index-1
         if idx > len(contents):
             idx = len(contents)
-        filename = contents[idx][:8]
+        filename = contents[idx][:8]  # узнать дату
         filePath = getHistoryGamesPath(filename)
         with open(filePath, 'rb')as file:
             allData = pickle.load(file)

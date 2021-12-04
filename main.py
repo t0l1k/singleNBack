@@ -49,6 +49,8 @@ def main():
                 elif e.key == pygame.K_p:
                     app.sceneToday.resultsView.plot = not app.sceneToday.resultsView.plot
                     log.info("Сменили вид представления результатов за сегодня.")
+                elif e.key == pygame.K_s:
+                    app.keyS()
                 elif e.key == pygame.K_LEFT:
                     app.keyTurnLeft()
                 elif e.key == pygame.K_RIGHT:

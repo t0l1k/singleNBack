@@ -73,6 +73,9 @@ class SceneGame:
     def keyTurnRight(self):
         pass
 
+    def keyS(self):
+        pass
+
     def keyPressed(self):
         if self.game.inGame:
             self.game.keyPressed()

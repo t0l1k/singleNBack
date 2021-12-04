@@ -1,4 +1,5 @@
 import matplotlib
+from matplotlib import ticker
 import pylab
 import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
@@ -9,13 +10,14 @@ from label import Label
 
 
 class ResultView:
-    def __init__(self, pos, size, boxHeight=20, rows=3, plot=False) -> None:
+    def __init__(self, pos, size, boxHeight=20,  plot=False, plot2=False) -> None:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.boxHeight = boxHeight
-        self.rows = rows
+        self._rows = 1
         self.rect = self.image.get_rect()
         self._plot = plot
+        self.plot2 = plot2
         self.createImage()
 
     def createImage(self):
@@ -25,6 +27,12 @@ class ResultView:
             dpi = size*100/300
             a, b = (4, 3) if self.rect.w > self.rect.h else (3, 3)
             self.image = createPlot(dpi, data, a, b)
+        elif self.plot2:
+            data = today_games_data.parseHistoryForPlot()
+            size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
+            dpi = size*100/300
+            a, b = (4, 3) if self.rect.w > self.rect.h else (3, 3)
+            self.image = createPlot2(dpi, data, a, b)
         else:
             self.board = pygame.Surface(
                 (self.rect.w, getLabelHeiht(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
@@ -72,6 +80,23 @@ class ResultView:
         self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
         self.createImage()
+
+    @property
+    def rows(self):
+        result = 3
+        if conf.w <= 640:
+            result = 1
+        elif conf.w <= 800:
+            result = 2
+        elif conf.w <= 1024:
+            result = 3
+        else:
+            result = 4
+        return result
+
+    @rows.setter
+    def rows(self, value):
+        self._rows = value
 
     @property
     def plot(self):
@@ -124,6 +149,7 @@ def createPlot(dpi, data, w, h):
     ax.grid(True)
     x, y, c, percent = data
     ax.plot(x, y)
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
     fig.autofmt_xdate()
     for i, color in enumerate(c):
         if color == "win":
@@ -142,6 +168,51 @@ def createPlot(dpi, data, w, h):
         plt.text(x[i], y[i], percent[i], ha='center',
                  va='center')
     plt.show()
+    canvas = agg.FigureCanvasAgg(fig)
+    canvas.draw()
+    renderer = canvas.get_renderer()
+    raw_data = renderer.tostring_rgb()
+    size = canvas.get_width_height()
+    surf = pygame.image.fromstring(raw_data, size, "RGB")
+    return surf
+
+
+def createPlot2(dpi, data, w, h):
+    matplotlib.use("Agg")
+    plt.rcParams.update({
+        "font.size": 5,
+        "text.color": "white",
+        "axes.facecolor": "grey",
+        "axes.labelcolor": "green",
+        "axes.edgecolor": "red",
+        "axes.grid": "True",
+        "grid.linestyle": ":",
+        "xtick.color": "darkgrey",
+        "ytick.color": "darkgrey",
+        "grid.color": "darkgrey",
+        "figure.facecolor": "grey",
+        "figure.edgecolor": "grey",
+    })
+    fig = pylab.figure(figsize=[w, h], dpi=dpi)
+    fig.patch.set_alpha(5)
+    ax = fig.gca()
+    ax.grid(True)
+    x, yMax, yAvg = data
+    ax.plot(x, yAvg, label="average", color="blue")
+    ax.plot(x, yMax, label="max", color="red")
+    ax.set_ylim(ymin=1)
+    ax.legend()
+    ax.xaxis.set_major_locator(ticker.MultipleLocator(1))
+    for i, date in enumerate(x):
+        x1 = x[i]
+        y1 = int(yMax[i])
+        y2 = float(yAvg[i])
+        print(x1, int(y1), float(y2))
+        plt.plot(x1, y1, "o", label="max", color="red")
+        plt.plot(x1, y2, "o", label="average", color="blue")
+    plt.grid(True)
+    plt.show()
+    fig.autofmt_xdate()
     canvas = agg.FigureCanvasAgg(fig)
     canvas.draw()
     renderer = canvas.get_renderer()
