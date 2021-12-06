@@ -207,7 +207,6 @@ def createPlot2(dpi, data, w, h):
         x1 = x[i]
         y1 = int(yMax[i])
         y2 = float(yAvg[i])
-        print(x1, int(y1), float(y2))
         plt.plot(x1, y1, "o", label="max", color="red")
         plt.plot(x1, y2, "o", label="average", color="blue")
     plt.grid(True)

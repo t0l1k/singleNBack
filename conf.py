@@ -22,23 +22,23 @@ fieldSize = 3  # ячеек на поле игры 2 и более, 3 класс
 w, h = 800, 600  # размер окна при старте приложения
 
 # theme orig
-# bgColor = (128, 128, 128)  # цвет фона окна
-# fgColor = (0, 0, 0)  # цвет текста
-# cellBgColor = bgColor  # цвет фона поля ячейки
-# cellFgColor = (0, 255, 255)  # цвет полос поля ячейки
-# cellActiveColor = (255, 255, 0)  # цвет показа ячейки
-# regularColor = (0, 0, 255)  # цвет отклика пользователя
-# correctColor = (0, 255, 0)  # цвет правильного ответа
-# errorColor = (255, 0, 0)  # цвет пропуска отметить повтор
-# warningColor = (255, 165, 0)  # цвет ошибочного предположения
+bgColor = (128, 128, 128)  # цвет фона окна
+fgColor = (0, 0, 0)  # цвет текста
+cellBgColor = bgColor  # цвет фона поля ячейки
+cellFgColor = (0, 255, 255)  # цвет полос поля ячейки
+cellActiveColor = (255, 255, 0)  # цвет показа ячейки
+regularColor = (0, 0, 255)  # цвет отклика пользователя
+correctColor = (0, 255, 0)  # цвет правильного ответа
+errorColor = (255, 0, 0)  # цвет пропуска отметить повтор
+warningColor = (255, 165, 0)  # цвет ошибочного предположения
 
 # theme monokai
-bgColor = (46, 46, 46)
-fgColor = (214, 214, 214)
-cellBgColor = (46, 46, 46)
-cellFgColor = (108, 153, 187)
-cellActiveColor = (180, 210, 115)
-regularColor = (108, 153, 187)
-correctColor = (180, 210, 115)
-errorColor = (176, 82, 121)
-warningColor = (232, 125, 62)
+# bgColor = (46, 46, 46)
+# fgColor = (214, 214, 214)
+# cellBgColor = (46, 46, 46)
+# cellFgColor = (108, 153, 187)
+# cellActiveColor = (180, 210, 115)
+# regularColor = (108, 153, 187)
+# correctColor = (180, 210, 115)
+# errorColor = (176, 82, 121)
+# warningColor = (232, 125, 62)
