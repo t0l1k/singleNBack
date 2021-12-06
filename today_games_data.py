@@ -73,6 +73,8 @@ def parseHistoryForPlot():
     try:
         with open(getHistoryPath(), 'r') as f:
             contents = f.readlines()
+            if len(contents) < 2:
+                raise FileNotFoundError
         for i, s in enumerate(contents):
             s = s.split()
             date = datetime.strptime(s[0], "%Y%m%d")
@@ -274,7 +276,10 @@ def saveHistory(day):
         getAverage(),
         countPlayTime())
     with open(getHistoryPath(), 'a') as file:
-        file.write("\n"+s)
+        if os.path.getsize(getHistoryPath()) > 0:
+            file.write("\n"+s)
+        else:
+            file.write(s)
     os.rename(getTodayGamesPath(), os.path.join("res", day+'.pickle'))
     log.info("Сохранили результаты за %s в файл истории игр.", day)
 

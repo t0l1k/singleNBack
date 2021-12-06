@@ -198,6 +198,8 @@ def createPlot2(dpi, data, w, h):
     ax = fig.gca()
     ax.grid(True)
     x, yMax, yAvg = data
+    if x is None or yMax is None or yAvg is None:
+        return pygame.Surface((1, 1))
     ax.plot(x, yAvg, label="average", color="blue")
     ax.plot(x, yMax, label="max", color="red")
     ax.set_ylim(ymin=1)

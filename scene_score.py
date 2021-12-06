@@ -13,7 +13,7 @@ class SceneScore:
 
     def setupScene(self):
         self.lblName = Label("Результаты за весь период", (0, 0), (1, 1))
-        self.resultsView = ResultView((0, 0), (100, 100), plot2=False)
+        self.resultsView = ResultView((0, 0), (100, 100), plot2=True)
         self.resize()
 
     def keyUp(self):
