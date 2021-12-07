@@ -1,12 +1,12 @@
 beginLevel = 1  # начальный уровень
 manualMode = False  # играть только на одном уровне установленном в beginLevel
 lives = 3  # число попыток
-moves = 5  # базовое число ходов формула moves*level+level для 4го уровня это 5*4+4=24
+moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
 
-timeToNextCell = 2000  # длительность до новой иконки
+timeToNextCell = 2500  # длительность до новой иконки
 timeShowCell = 1000  # длительность показа иконки
 incDurrationStep = 500  # увеличить продолжительность показа времени до новой клетки, если вопользовался дополнительной попыткой в миллисекундах
 timePause = 5  # желательная длина паузы между подходами
@@ -21,48 +21,24 @@ fieldSize = 3  # ячеек на поле игры 2 и более, 3 класс
 
 w, h = 800, 600  # размер окна при старте приложения
 
-
-red = (255, 0, 0)
-green = (0, 255, 0)
-orange = (255, 165, 0)
-blue = (0, 0, 255)
-gray = (144, 144, 144)
-black = (0, 0, 0)
-aqua = (0, 255, 255)
-yellow = (255, 255, 0)
-green1 = (178, 203, 50)
-black1 = (41, 41, 41)
-white = (252, 252, 252)
-
-# theme 0
-bgColor = gray  # цвет фона окна
-fgColor = white  # цвет текста в окне
+# theme orig
+bgColor = (128, 128, 128)  # цвет фона окна
+fgColor = (0, 0, 0)  # цвет текста
 cellBgColor = bgColor  # цвет фона поля ячейки
-cellFgColor = fgColor  # цвет полос поля ячейки
-cellActiveColor = yellow  # цвет показа ячейки
-regularColor = blue  # цвет отклика пользователя
-correctColor = green  # цвет правильного ответа
-errorColor = red  # цвет пропуска отметить повтор
-warningColor = orange  # цвет ошибочного предположения
+cellFgColor = (0, 255, 255)  # цвет полос поля ячейки
+cellActiveColor = (255, 255, 0)  # цвет показа ячейки
+regularColor = (0, 0, 255)  # цвет отклика пользователя
+correctColor = (0, 255, 0)  # цвет правильного ответа
+errorColor = (255, 0, 0)  # цвет пропуска отметить повтор
+warningColor = (255, 165, 0)  # цвет ошибочного предположения
 
-# # theme 1
-# bgColor = black1
-# fgColor = white
-# cellBgColor = bgColor
-# cellFgColor = fgColor
-# cellActiveColor = green1
-# regularColor = blue
-# correctColor = green1
-# errorColor = red
-# warningColor = orange
-
-# theme 2
-# bgColor = (49, 119, 108)
-# fgColor = (253, 207, 127)
-# cellBgColor = bgColor
-# cellFgColor = fgColor
-# cellActiveColor = (178, 254, 250)
-# regularColor = blue
-# correctColor = green1
-# errorColor = red
-# warningColor = orange
+# theme monokai
+# bgColor = (46, 46, 46)
+# fgColor = (214, 214, 214)
+# cellBgColor = (46, 46, 46)
+# cellFgColor = (108, 153, 187)
+# cellActiveColor = (180, 210, 115)
+# regularColor = (108, 153, 187)
+# correctColor = (180, 210, 115)
+# errorColor = (176, 82, 121)
+# warningColor = (232, 125, 62)

@@ -12,8 +12,8 @@ class Cell:
         self.active = False
 
     def setImage(self):
-        image = pygame.Surface((self.rect.w, self.rect.h))
-        image.fill(conf.cellBgColor)
+        image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
+        pygame.draw.rect(image, conf.cellBgColor, self.rect, border_radius=8)
         pygame.draw.rect(image, conf.cellFgColor,
                          self.rect, 3, border_radius=8)
         return image

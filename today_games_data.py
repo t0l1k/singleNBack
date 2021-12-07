@@ -4,7 +4,7 @@ import conf
 import logging as log
 from datetime import datetime
 from gamedata import GameData
-from scene_game_timer import Timer
+import scene_game_timer
 
 
 def getTodayResults():
@@ -13,7 +13,24 @@ def getTodayResults():
         getLastDoneGame(),
         getMaxLevel(),
         getAverage(),
-        getTimer())
+        countPlayTime())
+
+
+def countPlayTime():
+    t0 = 0  # всего миллисекунд
+    for _, v in get():
+        if v.isDone:
+            t3 = 0  # дополнительное время при дополнительной попытке
+            l = conf.lives - v.lives
+            if l > 0:
+                t3 = conf.incDurrationStep*l
+            t1 = conf.timeToNextCell+t3
+            t2 = conf.timeShowCell+t3
+            t0 += t1 * v.moves + t2 / 2
+    t0 = round(t0)
+    s = "{:>02}:{:>02}.{:>03}".format(
+        t0//1000//60, t0//1000 % 60, t0 % 1000)
+    return s
 
 
 def getDoneLevelsStr():
@@ -26,15 +43,49 @@ def getDoneLevelsStr():
 
 
 def parseGamesData():
-    # данные для графика
+    # данные для графика игр за сегодня
     x = []
     y = []
+    color = []
+    percent = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
             x.append(k)
             y.append(result)
-    return (x, y)
+            if getPercentFromGame(k) >= conf.nextLevelPercent:
+                color.append("win")
+            elif getPercentFromGame(k) < conf.dropLevelPercent and useExtraTry(k):
+                color.append("extra try")
+            elif getPercentFromGame(k) < conf.dropLevelPercent and not useExtraTry(k):
+                color.append("lost")
+            else:
+                color.append("regular")
+            percent.append(v.percent)
+    return (x, y, color, percent)
+
+
+def parseHistoryForPlot():
+    # данные для графика результаты за весь период
+    dt = []  # date results
+    mx = []  # max results
+    av = []  # average results
+    try:
+        with open(getHistoryPath(), 'r') as f:
+            contents = f.readlines()
+            if len(contents) < 2:
+                raise FileNotFoundError
+        for i, s in enumerate(contents):
+            s = s.split()
+            date = datetime.strptime(s[0], "%Y%m%d")
+            max = s[2].split(":")[1]
+            avg = s[3].split(":")[1]
+            dt.append(date)
+            mx.append(int(max))
+            av.append(float(avg))
+    except FileNotFoundError:
+        return None, None, None
+    return dt, mx, av
 
 
 def getDoneGamesStr():
@@ -200,10 +251,9 @@ def getGameDurationStr(nr):
 
 
 def getTodayGamesPath():
-    todayStr = datetime.now().strftime("%Y%m%d")
     if not os.path.isdir("res"):
         os.makedirs("res")
-    return os.path.join("res", todayStr+".pickle")
+    return os.path.join("res", "todayGames.pickle")
 
 
 def getHistoryPath():
@@ -211,10 +261,11 @@ def getHistoryPath():
 
 
 def saveGame():
-    with open(getTodayGamesPath(), 'wb') as file:
-        pickle.dump(__todayGamesData, file)
-        pickle.dump(getTimer(), file)
-    log.info("Сохранили новую запись последней игры.")
+    if len(__todayGamesData) > 0:
+        with open(getTodayGamesPath(), 'wb') as file:
+            pickle.dump(__todayGamesData, file)
+            pickle.dump(getTimer(), file)
+        log.info("Сохранили новую запись последней игры.")
 
 
 def saveHistory(day):
@@ -223,9 +274,12 @@ def saveHistory(day):
         getLastDoneGame(),
         getMaxLevel(),
         getAverage(),
-        getTimer())
+        countPlayTime())
     with open(getHistoryPath(), 'a') as file:
-        file.write("\n"+s)
+        if os.path.getsize(getHistoryPath()) > 0:
+            file.write("\n"+s)
+        else:
+            file.write(s)
     os.rename(getTodayGamesPath(), os.path.join("res", day+'.pickle'))
     log.info("Сохранили результаты за %s в файл истории игр.", day)
 
@@ -237,29 +291,30 @@ def getHistoryGamesPath(day):
 def readHistory(index):
     global useHistory
     contents = None
-    with open(getHistoryPath(), 'r') as f:
-        contents = f.readlines()
-    idx = len(contents)-index-1
-    if idx > len(contents):
-        idx = len(contents)
-    filename = contents[idx][:8]
-    filePath = getHistoryGamesPath(filename)
-    print(index, idx, filename, filePath)
+    try:
+        with open(getHistoryPath(), 'r') as f:
+            contents = f.readlines()
+        idx = len(contents)-index-1
+        if idx > len(contents):
+            idx = len(contents)
+        filename = contents[idx][:8]  # узнать дату
+        filePath = getHistoryGamesPath(filename)
+        with open(filePath, 'rb')as file:
+            allData = pickle.load(file)
+            timer = pickle.load(file)
+            parseTodayGames(allData, timer)
+    except FileNotFoundError:
+        return 0
     useHistory = True
-    with open(filePath, 'rb')as file:
-        allData = pickle.load(file)
-        timer = pickle.load(file)
-        parseTodayGames(allData, timer)
     return len(contents)
 
 
 def loadData():
-    global useHistory
+    todayStr = datetime.now().strftime("%Y%m%d")
     try:
         with open(getTodayGamesPath(), 'rb') as file:
             allData = pickle.load(file)
             timer = pickle.load(file)
-            todayStr = datetime.now().strftime("%Y%m%d")
             testDateStr = allData[0].dateBegin.strftime("%Y%m%d")
             if todayStr == testDateStr:
                 log.info("Загрузили все данные игр за сегодня.")
@@ -273,40 +328,25 @@ def loadData():
     except FileNotFoundError:
         reset()
         log.info("Первый запуск!")
-    finally:
-        useHistory = False
+
+
+def getTimer():
+    return scene_game_timer.instance
 
 
 def parseTodayGames(allData, timer):
     global __todayGamesData, __count
     __todayGamesData = allData
     __count = len(allData)-1
-    setTimer(timer)
+    scene_game_timer.instance == timer
     log.info("Восстановили игры за сегодня.")
 
 
-def getTimer():
-    global __timer
-    if __timer is None:
-        __timer = Timer()
-        __timer.start()
-    return __timer
-
-
-def setTimer(timer):
-    global __timer
-    if timer is None:
-        __timer = Timer()
-        __timer.start()
-        return
-    __timer = timer
-
-
 def reset():
-    global __todayGamesData, __count
-    setTimer(None)
+    global __todayGamesData, __count, __useHistory
     __count = 0
     __todayGamesData = {}
+    __useHistory = False
 
 
 @property
@@ -321,7 +361,6 @@ def useHistory(value):
 
 
 #####
-__timer = None
 __count = 0
 __todayGamesData = {}  # GameData
 __useHistory = False

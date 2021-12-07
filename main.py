@@ -49,6 +49,8 @@ def main():
                 elif e.key == pygame.K_p:
                     app.sceneToday.resultsView.plot = not app.sceneToday.resultsView.plot
                     log.info("Сменили вид представления результатов за сегодня.")
+                elif e.key == pygame.K_s:
+                    app.keyS()
                 elif e.key == pygame.K_LEFT:
                     app.keyTurnLeft()
                 elif e.key == pygame.K_RIGHT:
@@ -80,5 +82,6 @@ if __name__ == "__main__":
         level=log.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
         handlers=[log.StreamHandler()])
+    log.getLogger().setLevel(log.DEBUG)
     today_games_data.loadData()
     main()

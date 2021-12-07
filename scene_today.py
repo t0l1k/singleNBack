@@ -77,6 +77,9 @@ class SceneToday:
             today_games_data.loadData()
         self.app.setSceneGame()
 
+    def keyS(self):
+        self.app.setSceneScore()
+
     def quit(self):
         return True
 

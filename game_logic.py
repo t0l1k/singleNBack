@@ -45,7 +45,7 @@ class GameLogic:
 
     def getTotalMoves(self):
         # вычислить число ходов на основе константы maxMoves
-        return conf.moves*self.level+self.level
+        return conf.moves*self.level
 
     def keyPressed(self):
         self.pressed = True
@@ -122,6 +122,8 @@ class GameLogic:
             dateEnd=datetime.datetime.now())
 
     def getPercent(self):
+        if self.resetLevel:
+            return 0
         aa = self.countCorrect
         bb = self.countWrong
         if aa == 0 and bb == 0:

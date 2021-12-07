@@ -73,6 +73,9 @@ class SceneGame:
     def keyTurnRight(self):
         pass
 
+    def keyS(self):
+        pass
+
     def keyPressed(self):
         if self.game.inGame:
             self.game.keyPressed()
@@ -93,6 +96,7 @@ class SceneGame:
         self.sessionTimer.pause()
         if self.gameResults.quit():
             self.app.setSceneToday()
+            today_games_data.saveGame()
         return False
 
     def resize(self):
