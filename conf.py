@@ -4,7 +4,7 @@ lives = 3  # число попыток
 moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
 
 timeToNextCell = 2500  # длительность до новой иконки
 timeShowCell = 1000  # длительность показа иконки

@@ -7,6 +7,7 @@ import pygame
 import conf
 import today_games_data
 from label import Label
+import logging
 
 
 class ResultView:
@@ -25,13 +26,13 @@ class ResultView:
             data = today_games_data.parseGamesData()
             size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
             dpi = size*100/300
-            a, b = (4, 3) if self.rect.w > self.rect.h else (3, 3)
+            a, b = self.getAspectRatio()
             self.image = createPlot(dpi, data, a, b)
         elif self.plot2:
             data = today_games_data.parseHistoryForPlot()
             size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
             dpi = size*100/300
-            a, b = (4, 3) if self.rect.w > self.rect.h else (3, 3)
+            a, b = self.getAspectRatio()
             self.image = createPlot2(dpi, data, a, b)
         else:
             self.board = pygame.Surface(
@@ -59,6 +60,19 @@ class ResultView:
             self.rect.clamp_ip(self.board_rect)
             self.image = self.board.subsurface(self.rect)
         self.dirty = False
+
+    def getAspectRatio(self):
+        # узнать соотношение сторон
+        w, h = self.rect.w, self.rect.h
+        min = w if w < h else h
+        max = w if w > h else h
+        x = int(min/3)
+        a = 1
+        b = int(min/x)
+        while (x*a < max):
+            a += 1
+        a -= 1
+        return a, b
 
     def keyUp(self):
         self.rect.y += -self.boxHeight*2
@@ -127,6 +141,8 @@ def getLabelHeiht(hH, rows):
 
 
 def createPlot(dpi, data, w, h):
+    logger = logging.getLogger()
+    logger.setLevel(logging.CRITICAL)
     matplotlib.use("Agg")
     plt.rcParams.update({
         "lines.marker": "",
@@ -147,8 +163,9 @@ def createPlot(dpi, data, w, h):
     fig.patch.set_alpha(0.1)
     ax = fig.gca()
     ax.grid(True)
-    x, y, c, percent = data
+    x, y, c, percent, level = data
     ax.plot(x, y)
+    ax.plot(x, level)
     ax.xaxis.set_major_locator(ticker.MultipleLocator(5))
     fig.autofmt_xdate()
     for i, color in enumerate(c):
@@ -174,10 +191,13 @@ def createPlot(dpi, data, w, h):
     raw_data = renderer.tostring_rgb()
     size = canvas.get_width_height()
     surf = pygame.image.fromstring(raw_data, size, "RGB")
+    logger.setLevel(logging.DEBUG)
     return surf
 
 
 def createPlot2(dpi, data, w, h):
+    logger = logging.getLogger()
+    logger.setLevel(logging.CRITICAL)
     matplotlib.use("Agg")
     plt.rcParams.update({
         "font.size": 5,
@@ -194,7 +214,6 @@ def createPlot2(dpi, data, w, h):
         "figure.edgecolor": "grey",
     })
     fig = pylab.figure(figsize=[w, h], dpi=dpi)
-    fig.patch.set_alpha(5)
     ax = fig.gca()
     ax.grid(True)
     x, yMax, yAvg = data
@@ -220,4 +239,5 @@ def createPlot2(dpi, data, w, h):
     raw_data = renderer.tostring_rgb()
     size = canvas.get_width_height()
     surf = pygame.image.fromstring(raw_data, size, "RGB")
+    logger.setLevel(logging.DEBUG)
     return surf

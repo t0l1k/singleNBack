@@ -48,6 +48,7 @@ def parseGamesData():
     y = []
     color = []
     percent = []
+    level = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
@@ -62,7 +63,8 @@ def parseGamesData():
             else:
                 color.append("regular")
             percent.append(v.percent)
-    return (x, y, color, percent)
+            level.append(v.level)
+    return [x, y, color, percent, level]
 
 
 def parseHistoryForPlot():
