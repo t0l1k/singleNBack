@@ -40,19 +40,19 @@ class SceneGame:
         self.game.start()
 
     def update(self):
-        if self.game.inGame:
-            self.game.update()
-        elif self.gameResults.inGame:
-            self.gameResults.update()
-        if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
-            self.startNewGame()
+        self.sessionTimer.update()
+        self.lblTimer.setBgColor(self.game.bgColor)
+        self.lblTimer.setText(self.sessionTimer.__str__())
         if not self.game.inGame and not self.gameResults.inGame:
             log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
-        self.sessionTimer.update()
-        self.lblTimer.setBgColor(self.game.bgColor)
-        self.lblTimer.setText(self.sessionTimer.__str__())
+        if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
+            self.startNewGame()
+        if self.game.inGame:
+            self.game.update()
+        elif self.gameResults.inGame:
+            self.gameResults.update()
 
     def draw(self, screen):
         if self.game.inGame:
@@ -82,10 +82,10 @@ class SceneGame:
         elif self.gameResults.inGame:
             if self.gameResults.keyPressed():
                 log.debug("запустить новую игру")
-                self.gameResults.inGame = False
                 self.startNewGame()
 
     def startNewGame(self):
+        self.gameResults.inGame = False
         level = today_games_data.getLevelFromGame(
             today_games_data.getGameCount())
         lives = today_games_data.getLivesFromGame(
