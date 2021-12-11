@@ -2,7 +2,7 @@ beginLevel = 1  # начальный уровень
 manualMode = False  # играть только на одном уровне установленном в beginLevel
 toNextLevelGamesCount = 10  # игр для перехода на следующий уровень в режиме на ручнике
 lives = 3  # число попыток
-moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24
+moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24 хода
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
 resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке

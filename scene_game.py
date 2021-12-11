@@ -31,6 +31,8 @@ class SceneGame:
             self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
         self.sessionTimer.reset()
+        if not conf.feedbackOnPreviousMove:
+            self.lblTimer.visible = False
 
     def resultsStart(self):
         self.gameResults = GameResults()
@@ -47,6 +49,8 @@ class SceneGame:
             log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
+            if not conf.feedbackOnPreviousMove:
+                self.lblTimer.visible = True
         if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
             self.startNewGame()
         if self.game.inGame:
@@ -86,6 +90,8 @@ class SceneGame:
 
     def startNewGame(self):
         self.gameResults.inGame = False
+        if not conf.feedbackOnPreviousMove:
+            self.lblTimer.visible = False
         level = today_games_data.getLevelFromGame(
             today_games_data.getGameCount())
         lives = today_games_data.getLivesFromGame(

@@ -9,7 +9,17 @@ class Label:
         self.bg = bg
         self.fg = fg
         self.rect = pygame.rect.Rect(0, 0, size[0], size[1])
-        self.visible = True
+        self._visible = True
+
+    @property
+    def visible(self):
+        return self._visible
+
+    @visible.setter
+    def visible(self, value):
+        self._visible = value
+        if value:
+            self.image = self.setImage()
 
     def setImage(self):
         image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
