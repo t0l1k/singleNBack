@@ -48,6 +48,7 @@ def parseGamesData():
     y = []
     color = []
     percent = []
+    level = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
@@ -62,7 +63,8 @@ def parseGamesData():
             else:
                 color.append("regular")
             percent.append(v.percent)
-    return (x, y, color, percent)
+            level.append(v.level)
+    return [x, y, color, percent, level]
 
 
 def parseHistoryForPlot():
@@ -155,9 +157,31 @@ def calculateNextLevel():
         if level < 1:
             level = 1
             lives = conf.lives
+    elif conf.manualMode and isMatchesWins():
+        level += 1
     log.debug("Вычислили новый уровень:%s жизней:%s дополнительные попытки:%s",
               level, lives, extraTry)
     return (level, lives, extraTry)
+
+
+def isMatchesWins():
+    nr = getGameCount()
+    if nr < conf.toNextLevelGamesCount:
+        return False
+    last_level = getLevelFromGame(nr)
+    wins = 0
+    for i in range(conf.toNextLevelGamesCount):
+        percent = getPercentFromGame(nr)
+        level = getLevelFromGame(nr)
+        if percent < 100 or last_level != level:
+            return False
+        last_level = level
+        if nr >= 0:
+            nr -= 1
+        else:
+            return False
+        wins += 1
+    return True
 
 
 def add(data: GameData):

@@ -1,10 +1,11 @@
 beginLevel = 1  # начальный уровень
 manualMode = False  # играть только на одном уровне установленном в beginLevel
+toNextLevelGamesCount = 10  # игр для перехода на следующий уровень в режиме на ручнике
 lives = 3  # число попыток
-moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24
+moves = 6  # базовое число ходов формула moves*level для 4го уровня это 6*4=24 хода
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
 
 timeToNextCell = 2500  # длительность до новой иконки
 timeShowCell = 1000  # длительность показа иконки
@@ -12,7 +13,7 @@ incDurrationStep = 500  # увеличить продолжительность 
 timePause = 5  # желательная длина паузы между подходами
 autoToNextLevel = False  # начать следующий уровень после истечения паузы автоматически
 
-RR = 30  # минимальный процент повтора random repition
+RR = 20  # минимальный процент повтора random repition
 timeoutRR = 3  # сколько выделить секунд на генерацию RR
 
 feedbackOnPreviousMove = True

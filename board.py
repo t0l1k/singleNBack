@@ -14,6 +14,9 @@ class Board:
         self.lblMove = Label("---", (conf.w-w, 0), (w, h))
         self.lblLives = Label("---", (conf.w/2-w/2, 0), (w, h))
         self.field = self.createField(conf.w, conf.h)
+        if not conf.feedbackOnPreviousMove:
+            self.lblMove.visible = False
+            self.lblLives.visible = False
 
     def createField(self, w, h):
         size = conf.fieldSize
