@@ -2,7 +2,7 @@ from datetime import datetime
 
 
 class GameData:
-    def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False, dateBegin=0, dateEnd=0) -> None:
+    def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False, dateBegin=0, dateEnd=0, field=None) -> None:
         self._dateBegin = dateBegin
         self._dateEnd = dateEnd
         self._level = level
@@ -13,6 +13,15 @@ class GameData:
         self._percent = percent
         self._isDone = isDone
         self._useExtraTry = useExtraTry
+        self._field = field
+
+    @property
+    def field(self):
+        return self._field
+
+    @field.setter
+    def field(self, value):
+        self._field = value
 
     @property
     def dateBegin(self):

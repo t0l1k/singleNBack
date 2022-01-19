@@ -1,4 +1,5 @@
 import datetime
+from operator import le
 import random
 import pygame
 import conf
@@ -45,7 +46,10 @@ class GameLogic:
 
     def getTotalMoves(self):
         # вычислить число ходов на основе константы maxMoves
-        return conf.moves*self.level
+        result =  conf.moves*self.level
+        if conf.classicCount:
+           result = self.level*self.level+20
+        return result
 
     def keyPressed(self):
         self.pressed = True
@@ -119,7 +123,8 @@ class GameLogic:
             self.getPercent(),
             True,
             dateBegin=self.beginTime,
-            dateEnd=datetime.datetime.now())
+            dateEnd=datetime.datetime.now(),
+            field=self.board.arr)
 
     def getPercent(self):
         if self.resetLevel:
@@ -135,6 +140,7 @@ class GameLogic:
         return int(a*100/(a+b))
 
     def setLabels(self):
+        self.board.setBgColor(self.bgColor)
         self.board.lblLevel.setText(
             "#"+str(self.gameCount)+" N-Back "+str(self.level))
         self.board.lblMove.setText(str(self.moveCount))

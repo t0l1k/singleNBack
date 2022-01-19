@@ -125,7 +125,7 @@ class ResultView:
 def getLabelHeiht(hH, rows):
     lenght = today_games_data.getLastDoneGame(
     ) if today_games_data.getLastDoneGame()/rows > 0 else 1
-    size = hH*0.1
+    size = hH*0.05
     boxHeight = size
     hSurf = boxHeight*lenght
     if boxHeight*lenght < hH:

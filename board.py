@@ -14,6 +14,7 @@ class Board:
         self.lblMove = Label("---", (conf.w-w, 0), (w, h))
         self.lblLives = Label("---", (conf.w/2-w/2, 0), (w, h))
         self.field = self.createField(conf.w, conf.h)
+        self.bgColor = conf.bgColor
         if not conf.feedbackOnPreviousMove:
             self.lblMove.visible = False
             self.lblLives.visible = False
@@ -49,6 +50,15 @@ class Board:
     def getNextActiveCell(self):
         self.activeCellNr = self.arr[self.idx]
         self.idx += 1
+
+    def setBgColor(self, color):
+        self.bgColor = color
+        self.lblMove.setBgColor(self.bgColor)
+        self.lblLives.setBgColor(self.bgColor)
+        self.lblLevel.setBgColor(self.bgColor)
+        for _,cell in enumerate(self.field):
+            cell.setBg(self.bgColor)
+
 
     def draw(self, screen):
         self.lblLevel.draw(screen)

@@ -166,7 +166,7 @@ def calculateNextLevel():
 
 def isMatchesWins():
     nr = getGameCount()
-    if nr < conf.toNextLevelGamesCount:
+    if nr < conf.toNextLevelGamesCount-1:
         return False
     last_level = getLevelFromGame(nr)
     wins = 0
