@@ -47,7 +47,7 @@ class ResultView:
                 x = idx % self.rows
                 y = idx//self.rows
                 l = Label(s[idx], (x*boxWidth, y*boxHeight),
-                          (boxWidth, boxHeight))
+                          (boxWidth, boxHeight),fg=conf.cellFgColor)
                 if today_games_data.getPercentFromGame(idx) >= conf.nextLevelPercent:
                     l.setBgColor(conf.regularColor)
                 elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):

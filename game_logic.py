@@ -4,10 +4,12 @@ import random
 import pygame
 import conf
 from board import Board
-import logging as log
+import logging 
 import time
 from today_games_data import GameData
 
+
+log = logging.getLogger(__name__)
 
 class GameLogic:
     # Классический nback, есть поле 3х3 в нем появляются иконки и при повторе n-шагов назад отметить повтор, после завершения сессии выдать результат, при проценте выше 80 переход на следующий уровень, при проценте ниже 50 повтор этого же уровня в три попытки, если попытки исчерпаны, переход на уровень ниже.

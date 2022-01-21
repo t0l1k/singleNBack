@@ -1,10 +1,12 @@
 import conf
 import today_games_data
-import logging as log
+import logging 
 from game_logic import GameLogic
 from games_result import GameResults
 from label import Label
 
+
+log = logging.getLogger(__name__)
 
 class SceneGame:
     def __init__(self, app) -> None:

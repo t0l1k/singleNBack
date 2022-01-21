@@ -29,17 +29,17 @@ fgColor = (0, 0, 0)  # цвет текста
 cellBgColor = bgColor  # цвет фона поля ячейки
 cellFgColor = (0, 255, 255)  # цвет полос поля ячейки
 cellActiveColor = (255, 255, 0)  # цвет показа ячейки
-regularColor = (0, 0, 255)  # цвет отклика пользователя
-correctColor = (0, 255, 0)  # цвет правильного ответа
-errorColor = (255, 0, 0)  # цвет пропуска отметить повтор
+regularColor = (0, 0, 128)  # цвет отклика пользователя
+correctColor = (0, 128, 0)  # цвет правильного ответа
+errorColor = (128, 0, 0)  # цвет пропуска отметить повтор
 warningColor = (255, 165, 0)  # цвет ошибочного предположения
 
 # theme monokai
 # bgColor = (46, 46, 46)
 # fgColor = (214, 214, 214)
 # cellBgColor = (46, 46, 46)
-# cellFgColor = (108, 153, 187)
-# cellActiveColor = (180, 210, 115)
+# cellFgColor = (0, 136, 119)
+# cellActiveColor = (230, 219, 116)
 # regularColor = (108, 153, 187)
 # correctColor = (180, 210, 115)
 # errorColor = (176, 82, 121)

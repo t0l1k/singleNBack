@@ -1,7 +1,9 @@
-import logging as log
+import logging 
 from scene_score import SceneScore
 from scene_today import SceneToday
 from scene_game import SceneGame
+
+log = logging.getLogger(__name__)
 
 
 class App:

@@ -6,7 +6,7 @@ class Cell:
     def __init__(self, pos, size) -> None:
         self.pos = pos
         self.rect = pygame.rect.Rect(0, 0, size, size)
-        self.margin = int(size*.05)
+        self.margin = int(size*0.12)
         self.bg = conf.cellBgColor
         self.image = self.setImage()
         self.imageActive = self.setImageActive()
@@ -44,7 +44,7 @@ class Cell:
 
     def setSize(self, size):
         self.rect = pygame.rect.Rect(0, 0, size, size)
-        self.margin = int(size*.05)
+        self.margin = int(size*0.12)
 
     def resize(self, pos, size):
         self.setPos(pos)

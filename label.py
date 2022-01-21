@@ -48,6 +48,7 @@ class Label:
         return font_size
 
     def setText(self, str):
+        if self.str == str: return
         if self.visible:
             self.str = str
             self.image = self.setImage()
@@ -57,15 +58,18 @@ class Label:
             screen.blit(self.image, self.pos)
 
     def setBgColor(self, color):
+        if self.bg == color: return
         if self.visible:
             self.bg = color
             self.image = self.setImage()
 
     def setPos(self, pos):
+        if self.pos == pos: return
         if self.visible:
             self.pos = pos
 
     def setSize(self, size):
+        if self.rect.size == size:return
         if self.visible:
             self.rect = pygame.rect.Rect(0, 0, size[0], size[1])
             self.image = self.setImage()
