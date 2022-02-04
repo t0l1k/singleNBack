@@ -1,8 +1,10 @@
 import conf
 import today_games_data
 from label import Label
-import logging as log
+import logging
 from scene_today_results import ResultView
+
+log = logging.getLogger(__name__)
 
 
 class SceneToday:

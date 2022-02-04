@@ -1,7 +1,9 @@
 import pygame
-import logging 
+import logging
 
 log = logging.getLogger(__name__)
+
+
 class Timer:
     def __init__(self) -> None:
         self.running = True

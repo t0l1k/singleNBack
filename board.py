@@ -27,9 +27,12 @@ class Board:
         field = []
         for y in range(size):
             for x in range(size):
+                isCenter = False
                 cellX = x*cellSize+marginX
                 cellY = y*cellSize+marginY
-                c = Cell((cellX, cellY), cellSize)
+                if size//2 == x and size//2 == y:
+                    isCenter = True
+                c = Cell((cellX, cellY), cellSize, isCenter)
                 field.append(c)
         return field
 
@@ -56,9 +59,8 @@ class Board:
         self.lblMove.setBgColor(self.bgColor)
         self.lblLives.setBgColor(self.bgColor)
         self.lblLevel.setBgColor(self.bgColor)
-        for _,cell in enumerate(self.field):
+        for _, cell in enumerate(self.field):
             cell.setBg(self.bgColor)
-
 
     def draw(self, screen):
         self.lblLevel.draw(screen)
