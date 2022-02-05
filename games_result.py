@@ -7,7 +7,6 @@ import logging
 log = logging.getLogger(__name__)
 
 
-
 class GameResults:
     def __init__(self) -> None:
         self.inGame = False
@@ -23,16 +22,16 @@ class GameResults:
     def setup(self, color):
         self.bgColor = color
         s = today_games_data.getDoneGamesStr()
-        self.lblResults.setText(s)
+        self.lblResults.text = s
         log.debug(s)
         self.lblTimer.visible = True
         lives = today_games_data.getLivesFromGame(
             today_games_data.getGameCount())
         self.pauseTime = (conf.lives + 1 - lives) * conf.timePause*1000
         self.pauseTimer = pygame.time.get_ticks()
-        self.lblName.setBgColor(self.bgColor)
-        self.lblResults.setBgColor(self.bgColor)
-        self.lblTimer.setBgColor(self.bgColor)
+        self.lblName.bg = self.bgColor
+        self.lblResults.bg = self.bgColor
+        self.lblTimer.bg = self.bgColor
         self.inGame = True
 
     def update(self):
@@ -41,8 +40,8 @@ class GameResults:
                 if self.lblTimer.visible:
                     self.lblTimer.visible = False
             else:
-                self.lblTimer.setText(
-                    str(self.pauseTime//1000-(pygame.time.get_ticks()-self.pauseTimer)//1000))
+                self.lblTimer.text = str(
+                    self.pauseTime//1000-(pygame.time.get_ticks()-self.pauseTimer)//1000)
 
     def isPaused(self):
         return pygame.time.get_ticks()-self.pauseTimer > self.pauseTime

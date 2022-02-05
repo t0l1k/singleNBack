@@ -32,7 +32,7 @@ class Board:
                 cellY = y*cellSize+marginY
                 if size//2 == x and size//2 == y:
                     isCenter = True
-                c = Cell((cellX, cellY), cellSize, isCenter)
+                c = Cell((cellX, cellY), (cellSize, cellSize), isCenter)
                 field.append(c)
         return field
 
@@ -56,11 +56,15 @@ class Board:
 
     def setBgColor(self, color):
         self.bgColor = color
-        self.lblMove.setBgColor(self.bgColor)
-        self.lblLives.setBgColor(self.bgColor)
-        self.lblLevel.setBgColor(self.bgColor)
+        self.lblMove.bg = self.bgColor
+        self.lblLives.bg = self.bgColor
+        self.lblLevel.bg = self.bgColor
         for _, cell in enumerate(self.field):
-            cell.setBg(self.bgColor)
+            cell.bg = self.bgColor
+
+    def update(self, dt):
+        for cell in self.field:
+            cell.update(dt)
 
     def draw(self, screen):
         self.lblLevel.draw(screen)
@@ -82,7 +86,7 @@ class Board:
             y = i//size
             cellX = x*cellSize+marginX
             cellY = y*cellSize+marginY
-            cell.resize((cellX, cellY), cellSize)
+            cell.resize([cellX, cellY], [cellSize, cellSize])
         w, h = int(conf.w*0.3), int(conf.h*0.08)
         self.lblLevel.resize((0, 0), (w, h))
         self.lblMove.resize((conf.w-w, 0), (w, h))

@@ -47,15 +47,15 @@ class ResultView:
                 x = idx % self.rows
                 y = idx//self.rows
                 l = Label(s[idx], (x*boxWidth, y*boxHeight),
-                          (boxWidth, boxHeight),fg=conf.cellFgColor)
+                          (boxWidth, boxHeight), fg=conf.cellFgColor)
                 if today_games_data.getPercentFromGame(idx) >= conf.nextLevelPercent:
-                    l.setBgColor(conf.regularColor)
+                    l.bg = conf.regularColor
                 elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):
-                    l.setBgColor(conf.warningColor)
+                    l.bg = conf.warningColor
                 elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and not today_games_data.useExtraTry(idx):
-                    l.setBgColor(conf.errorColor)
+                    l.bg = conf.errorColor
                 else:
-                    l.setBgColor(conf.correctColor)
+                    l.bg = conf.correctColor
                 l.draw(self.board)
             self.rect.clamp_ip(self.board_rect)
             self.image = self.board.subsurface(self.rect)

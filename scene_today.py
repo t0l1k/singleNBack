@@ -25,7 +25,7 @@ class SceneToday:
     def getStatistic(self):
         s = today_games_data.getTodayResults()
         log.debug(s)
-        self.lblTodayGames.setText(s)
+        self.lblTodayGames.text = s
         for k, v in today_games_data.get():
             log.debug("#%s [%s]", k, v.__str__())
         self.resultsView.dirty = True

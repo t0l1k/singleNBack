@@ -1,12 +1,13 @@
 import conf
 import today_games_data
-import logging 
+import logging
 from game_logic import GameLogic
 from games_result import GameResults
 from label import Label
 
 
 log = logging.getLogger(__name__)
+
 
 class SceneGame:
     def __init__(self, app) -> None:
@@ -45,8 +46,8 @@ class SceneGame:
 
     def update(self):
         self.sessionTimer.update()
-        self.lblTimer.setBgColor(self.game.bgColor)
-        self.lblTimer.setText(self.sessionTimer.__str__())
+        self.lblTimer.bg = self.game.bgColor
+        self.lblTimer.text = self.sessionTimer.__str__()
         if not self.game.inGame and not self.gameResults.inGame:
             log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())

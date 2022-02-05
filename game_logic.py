@@ -4,12 +4,13 @@ import random
 import pygame
 import conf
 from board import Board
-import logging 
+import logging
 import time
 from today_games_data import GameData
 
 
 log = logging.getLogger(__name__)
+
 
 class GameLogic:
     # Классический nback, есть поле 3х3 в нем появляются иконки и при повторе n-шагов назад отметить повтор, после завершения сессии выдать результат, при проценте выше 80 переход на следующий уровень, при проценте ниже 50 повтор этого же уровня в три попытки, если попытки исчерпаны, переход на уровень ниже.
@@ -48,9 +49,9 @@ class GameLogic:
 
     def getTotalMoves(self):
         # вычислить число ходов на основе константы maxMoves
-        result =  conf.moves*self.level
+        result = conf.moves*self.level
         if conf.classicCount:
-           result = self.level*self.level+20
+            result = self.level*self.level+20
         return result
 
     def keyPressed(self):
@@ -113,6 +114,7 @@ class GameLogic:
                         log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
+            self.board.update(0)
         self.setLabels()
 
     def sendGameResult(self):
@@ -143,10 +145,10 @@ class GameLogic:
 
     def setLabels(self):
         self.board.setBgColor(self.bgColor)
-        self.board.lblLevel.setText(
-            "#"+str(self.gameCount)+" N-Back "+str(self.level))
-        self.board.lblMove.setText(str(self.moveCount))
-        self.board.lblLives.setText("Lives: "+str(self.lives))
+        self.board.lblLevel.text = "#" + \
+            str(self.gameCount)+" N-Back "+str(self.level)
+        self.board.lblMove.text = str(self.moveCount)
+        self.board.lblLives.text = "Lives: "+str(self.lives)
 
     def draw(self, screen):
         screen.fill(self.bgColor)
