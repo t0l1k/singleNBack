@@ -2,7 +2,9 @@ import pygame
 import today_games_data
 import conf
 from app import App
-import logging as log
+import logging 
+
+log = logging.getLogger(__name__)
 
 
 def main():
@@ -78,10 +80,9 @@ def setScreen(isFullScreen, size):
 
 
 if __name__ == "__main__":
-    log.basicConfig(
-        level=log.DEBUG,
+    logging.basicConfig(
+        level=logging.DEBUG,
         format="%(asctime)s [%(levelname)s] %(message)s",
-        handlers=[log.StreamHandler()])
-    log.getLogger().setLevel(log.DEBUG)
+        handlers=[logging.StreamHandler()])
     today_games_data.loadData()
     main()

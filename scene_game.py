@@ -1,9 +1,12 @@
 import conf
 import today_games_data
-import logging as log
+import logging
 from game_logic import GameLogic
 from games_result import GameResults
 from label import Label
+
+
+log = logging.getLogger(__name__)
 
 
 class SceneGame:
@@ -31,7 +34,7 @@ class SceneGame:
             self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
         self.sessionTimer.reset()
-        if not conf.feedbackOnPreviousMove:
+        if not conf.feedbackOnPreviousMove or conf.manualMode:
             self.lblTimer.visible = False
 
     def resultsStart(self):
@@ -43,13 +46,13 @@ class SceneGame:
 
     def update(self):
         self.sessionTimer.update()
-        self.lblTimer.setBgColor(self.game.bgColor)
-        self.lblTimer.setText(self.sessionTimer.__str__())
+        self.lblTimer.bg = self.game.bgColor
+        self.lblTimer.text = self.sessionTimer.__str__()
         if not self.game.inGame and not self.gameResults.inGame:
             log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
-            if not conf.feedbackOnPreviousMove:
+            if not conf.feedbackOnPreviousMove or conf.manualMode:
                 self.lblTimer.visible = True
         if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
             self.startNewGame()
@@ -90,7 +93,7 @@ class SceneGame:
 
     def startNewGame(self):
         self.gameResults.inGame = False
-        if not conf.feedbackOnPreviousMove:
+        if not conf.feedbackOnPreviousMove or conf.manualMode:
             self.lblTimer.visible = False
         level = today_games_data.getLevelFromGame(
             today_games_data.getGameCount())

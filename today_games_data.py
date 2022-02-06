@@ -1,10 +1,12 @@
 import os
 import pickle
 import conf
-import logging as log
+import logging 
 from datetime import datetime
 from gamedata import GameData
 import scene_game_timer
+
+log = logging.getLogger(__name__)
 
 
 def getTodayResults():
@@ -166,7 +168,7 @@ def calculateNextLevel():
 
 def isMatchesWins():
     nr = getGameCount()
-    if nr < conf.toNextLevelGamesCount:
+    if nr < conf.toNextLevelGamesCount-1:
         return False
     last_level = getLevelFromGame(nr)
     wins = 0

@@ -1,11 +1,15 @@
 import datetime
+from operator import le
 import random
 import pygame
 import conf
 from board import Board
-import logging as log
+import logging
 import time
 from today_games_data import GameData
+
+
+log = logging.getLogger(__name__)
 
 
 class GameLogic:
@@ -45,7 +49,10 @@ class GameLogic:
 
     def getTotalMoves(self):
         # вычислить число ходов на основе константы maxMoves
-        return conf.moves*self.level
+        result = conf.moves*self.level
+        if conf.classicCount:
+            result = self.level*self.level+20
+        return result
 
     def keyPressed(self):
         self.pressed = True
@@ -107,6 +114,7 @@ class GameLogic:
                         log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
+            self.board.update(0)
         self.setLabels()
 
     def sendGameResult(self):
@@ -119,7 +127,8 @@ class GameLogic:
             self.getPercent(),
             True,
             dateBegin=self.beginTime,
-            dateEnd=datetime.datetime.now())
+            dateEnd=datetime.datetime.now(),
+            field=self.board.arr)
 
     def getPercent(self):
         if self.resetLevel:
@@ -135,10 +144,11 @@ class GameLogic:
         return int(a*100/(a+b))
 
     def setLabels(self):
-        self.board.lblLevel.setText(
-            "#"+str(self.gameCount)+" N-Back "+str(self.level))
-        self.board.lblMove.setText(str(self.moveCount))
-        self.board.lblLives.setText("Lives: "+str(self.lives))
+        self.board.setBgColor(self.bgColor)
+        self.board.lblLevel.text = "#" + \
+            str(self.gameCount)+" N-Back "+str(self.level)
+        self.board.lblMove.text = str(self.moveCount)
+        self.board.lblLives.text = "Lives: "+str(self.lives)
 
     def draw(self, screen):
         screen.fill(self.bgColor)

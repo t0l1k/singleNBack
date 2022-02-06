@@ -1,8 +1,10 @@
 import conf
 import today_games_data
 from label import Label
-import logging as log
+import logging
 from scene_today_results import ResultView
+
+log = logging.getLogger(__name__)
 
 
 class SceneToday:
@@ -23,7 +25,7 @@ class SceneToday:
     def getStatistic(self):
         s = today_games_data.getTodayResults()
         log.debug(s)
-        self.lblTodayGames.setText(s)
+        self.lblTodayGames.text = s
         for k, v in today_games_data.get():
             log.debug("#%s [%s]", k, v.__str__())
         self.resultsView.dirty = True

@@ -14,6 +14,7 @@ class Board:
         self.lblMove = Label("---", (conf.w-w, 0), (w, h))
         self.lblLives = Label("---", (conf.w/2-w/2, 0), (w, h))
         self.field = self.createField(conf.w, conf.h)
+        self.bgColor = conf.bgColor
         if not conf.feedbackOnPreviousMove:
             self.lblMove.visible = False
             self.lblLives.visible = False
@@ -26,9 +27,12 @@ class Board:
         field = []
         for y in range(size):
             for x in range(size):
+                isCenter = False
                 cellX = x*cellSize+marginX
                 cellY = y*cellSize+marginY
-                c = Cell((cellX, cellY), cellSize)
+                if size//2 == x and size//2 == y:
+                    isCenter = True
+                c = Cell((cellX, cellY), (cellSize, cellSize), isCenter)
                 field.append(c)
         return field
 
@@ -50,6 +54,18 @@ class Board:
         self.activeCellNr = self.arr[self.idx]
         self.idx += 1
 
+    def setBgColor(self, color):
+        self.bgColor = color
+        self.lblMove.bg = self.bgColor
+        self.lblLives.bg = self.bgColor
+        self.lblLevel.bg = self.bgColor
+        for _, cell in enumerate(self.field):
+            cell.bg = self.bgColor
+
+    def update(self, dt):
+        for cell in self.field:
+            cell.update(dt)
+
     def draw(self, screen):
         self.lblLevel.draw(screen)
         self.lblMove.draw(screen)
@@ -70,7 +86,7 @@ class Board:
             y = i//size
             cellX = x*cellSize+marginX
             cellY = y*cellSize+marginY
-            cell.resize((cellX, cellY), cellSize)
+            cell.resize([cellX, cellY], [cellSize, cellSize])
         w, h = int(conf.w*0.3), int(conf.h*0.08)
         self.lblLevel.resize((0, 0), (w, h))
         self.lblMove.resize((conf.w-w, 0), (w, h))
