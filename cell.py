@@ -36,7 +36,7 @@ class Cell(Drawable):
         return image
 
     def layoutActive(self):
-        image = pygame.Surface((self.rect.w, self.rect.h))
+        image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
         image.fill(self._bg)
         rect = pygame.Rect((0, 0), self.rect.size)
         pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)

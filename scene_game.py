@@ -1,6 +1,9 @@
+import pygame
 import conf
+from scene import Scene
 import today_games_data
 import logging
+import scene
 from game_logic import GameLogic
 from games_result import GameResults
 from label import Label
@@ -9,10 +12,9 @@ from label import Label
 log = logging.getLogger(__name__)
 
 
-class SceneGame:
-    def __init__(self, app) -> None:
-        self.app = app
-        self.next = app.sceneToday
+class SceneGame(Scene):
+    def __init__(self) -> None:
+        super().__init__()
         self.sessionTimer = today_games_data.getTimer()
         self.setupTimerLabel()
         self.game = None
@@ -21,11 +23,8 @@ class SceneGame:
         w, h = int(conf.w*0.2), int(conf.h*0.08)
         self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
 
-    def getScene(self):
-        return self.next
-
-    def setScene(self, next):
-        self.next = next
+    def entered(self):
+        super().entered()
         if today_games_data.getSize() > 0:  # загрузить последний уровень и попытки
             last = today_games_data.getSize()-1
             self.gameStart(today_games_data.getLevelFromGame(last),
@@ -44,7 +43,7 @@ class SceneGame:
         self.game = GameLogic(today_games_data.getGameCount(), level, lives)
         self.game.start()
 
-    def update(self):
+    def update(self, dt):
         self.sessionTimer.update()
         self.lblTimer.bg = self.game.bgColor
         self.lblTimer.text = self.sessionTimer.__str__()
@@ -60,6 +59,7 @@ class SceneGame:
             self.game.update()
         elif self.gameResults.inGame:
             self.gameResults.update()
+        self.lblTimer.update(dt)
 
     def draw(self, screen):
         if self.game.inGame:
@@ -68,28 +68,15 @@ class SceneGame:
             self.gameResults.draw(screen)
         self.lblTimer.draw(screen)
 
-    def keyUp(self):
-        pass
-
-    def keyDown(self):
-        pass
-
-    def keyTurnLeft(self):
-        pass
-
-    def keyTurnRight(self):
-        pass
-
-    def keyS(self):
-        pass
-
-    def keyPressed(self):
-        if self.game.inGame:
-            self.game.keyPressed()
-        elif self.gameResults.inGame:
-            if self.gameResults.keyPressed():
-                log.debug("запустить новую игру")
-                self.startNewGame()
+    def key_up(self, key):
+        super().key_up(key)
+        if key == pygame.K_SPACE:
+            if self.game.inGame:
+                self.game.keyPressed()
+            elif self.gameResults.inGame:
+                if self.gameResults.keyPressed():
+                    log.debug("запустить новую игру")
+                    self.startNewGame()
 
     def startNewGame(self):
         self.gameResults.inGame = False
@@ -104,9 +91,7 @@ class SceneGame:
     def quit(self):
         self.sessionTimer.pause()
         if self.gameResults.quit():
-            self.app.setSceneToday()
             today_games_data.saveGame()
-        return False
 
     def resize(self):
         w, h = int(conf.w*0.2), int(conf.h*0.08)

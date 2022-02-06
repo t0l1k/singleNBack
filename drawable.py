@@ -1,5 +1,6 @@
 import pygame
 import conf
+import callback
 
 
 class Drawable:
@@ -10,6 +11,8 @@ class Drawable:
         self._visible = True
         self._dirty = True
         self.image = None
+        self.onKeyUp = callback.Signal()
+        self.onKeyDown = callback.Signal()
 
     @property
     def bg(self):
@@ -46,7 +49,7 @@ class Drawable:
             self.image = self.layout()
 
     def layout(self):
-        return pygame.Surface(self.rect.size)
+        return pygame.Surface(self.rect.size, pygame.SRCALPHA)
 
     def update(self, dt):
         if self._dirty:
@@ -64,3 +67,9 @@ class Drawable:
         if self._visible:
             self.rect = rect
             self.image = self.layout()
+
+    def key_up(self, key):
+        self.onKeyUp(self, key)
+
+    def key_down(self, key):
+        self.onKeyDown(self, key)

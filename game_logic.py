@@ -1,5 +1,4 @@
 import datetime
-from operator import le
 import random
 import pygame
 import conf
