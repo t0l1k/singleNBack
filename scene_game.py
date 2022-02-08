@@ -1,11 +1,11 @@
 import pygame
 import conf
+import window
 from scene import Scene
 import today_games_data
 import logging
-import scene
 from game_logic import GameLogic
-from games_result import GameResults
+from game_result import GameResult
 from label import Label
 
 
@@ -16,12 +16,9 @@ class SceneGame(Scene):
     def __init__(self) -> None:
         super().__init__()
         self.sessionTimer = today_games_data.getTimer()
-        self.setupTimerLabel()
+        self.lblTimer = Label("---", (0, 0), (1, 1))
         self.game = None
-
-    def setupTimerLabel(self):
-        w, h = int(conf.w*0.2), int(conf.h*0.08)
-        self.lblTimer = Label("---", (conf.w/2-w/2, conf.h-h), (w, h))
+        self.resize()
 
     def entered(self):
         super().entered()
@@ -37,7 +34,7 @@ class SceneGame(Scene):
             self.lblTimer.visible = False
 
     def resultsStart(self):
-        self.gameResults = GameResults()
+        self.gameResults = GameResult()
 
     def gameStart(self, level, lives):
         self.game = GameLogic(today_games_data.getGameCount(), level, lives)
@@ -94,8 +91,10 @@ class SceneGame(Scene):
             today_games_data.saveGame()
 
     def resize(self):
-        w, h = int(conf.w*0.2), int(conf.h*0.08)
-        self.lblTimer.resize((conf.w/2-w/2, conf.h-h), (w, h))
+        super().resize()
         if self.game != None:
             self.game.resize()
             self.gameResults.resize()
+        w, h = int(window.rect.w*0.2), int(window.rect.h*0.08)
+        self.lblTimer.resize(
+            (window.rect.w/2-w/2, window.rect.h-h), (w, h))

@@ -37,7 +37,7 @@ class Scene(Drawable):
     def resize(self):
         self.pos = window.rect.topleft
         self.size = window.rect.size
-        logging.info("Scene resize %s", self.name)
+        logging.info("Scene %s resized.", self.name)
 
     def key_up(self, key):
         if key == pygame.K_ESCAPE:

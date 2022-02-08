@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
 import pygame
 import conf
+import window
 import today_games_data
 from label import Label
 import logging
@@ -19,21 +20,20 @@ class ResultView:
         self.rect = self.image.get_rect()
         self._plot = plot
         self.plot2 = plot2
-        self.createImage()
 
-    def createImage(self):
+    def layout(self):
         if self.plot:
             data = today_games_data.parseGamesData()
             size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
             dpi = size*100/300
             a, b = self.getAspectRatio()
-            self.image = createPlot(dpi, data, a, b)
+            image = createPlot(dpi, data, a, b)
         elif self.plot2:
             data = today_games_data.parseHistoryForPlot()
             size = self.rect.h if self.rect.w > self.rect.h else self.rect.w
             dpi = size*100/300
             a, b = self.getAspectRatio()
-            self.image = createPlot2(dpi, data, a, b)
+            image = createPlot2(dpi, data, a, b)
         else:
             self.board = pygame.Surface(
                 (self.rect.w, getLabelHeiht(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
@@ -58,8 +58,9 @@ class ResultView:
                     l.bg = conf.correctColor
                 l.draw(self.board)
             self.rect.clamp_ip(self.board_rect)
-            self.image = self.board.subsurface(self.rect)
-        self.dirty = False
+            image = self.board.subsurface(self.rect)
+        self._dirty = False
+        return image
 
     def getAspectRatio(self):
         # узнать соотношение сторон
@@ -74,17 +75,9 @@ class ResultView:
         a -= 1
         return a, b
 
-    def keyUp(self):
-        self.rect.y += -self.boxHeight*2
-        self.dirty = True
-
-    def keyDown(self):
-        self.rect.y -= -self.boxHeight*2
-        self.dirty = True
-
-    def update(self):
-        if self.dirty:
-            self.createImage()
+    def update(self, dt):
+        if self._dirty:
+            self.image = self.layout()
 
     def draw(self, screen):
         screen.blit(self.image, self.pos)
@@ -93,16 +86,16 @@ class ResultView:
         self.pos = pos
         self.image = pygame.Surface(size)
         self.rect = self.image.get_rect()
-        self.createImage()
+        self._dirty = True
 
     @property
     def rows(self):
         result = 3
-        if conf.w <= 640:
+        if window.rect.w <= 640:
             result = 1
-        elif conf.w <= 800:
+        elif window.rect.w <= 800:
             result = 2
-        elif conf.w <= 1024:
+        elif window.rect.w <= 1024:
             result = 3
         else:
             result = 4
@@ -111,6 +104,7 @@ class ResultView:
     @rows.setter
     def rows(self, value):
         self._rows = value
+        self._dirty = True
 
     @property
     def plot(self):
@@ -119,7 +113,7 @@ class ResultView:
     @plot.setter
     def plot(self, value):
         self._plot = value
-        self.dirty = True
+        self._dirty = True
 
 
 def getLabelHeiht(hH, rows):

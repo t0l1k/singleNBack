@@ -2,7 +2,6 @@ import logging
 import window
 import scene
 import pygame
-import conf
 import today_games_data
 
 log = logging.getLogger(__name__)
@@ -71,7 +70,6 @@ def handle_resize(e):
             resized = True
     if resized:
         window.surface = set_mode(window.fullscreen, size)
-        conf.w, conf.h = pygame.display.get_window_size()
         if scene.current is not None:
             for sc in scene.stack:
                 sc.resize()

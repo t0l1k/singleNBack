@@ -1,6 +1,7 @@
 import pygame
 import sys
 import conf
+import window
 import scene
 from scene_game import SceneGame
 from scene_score import SceneScore
@@ -17,9 +18,6 @@ class SceneToday(scene.Scene):
 
     def __init__(self) -> None:
         super().__init__()
-        self.setupScene()
-
-    def setupScene(self):
         self.lblName = Label("Игры сегодня", (0, 0), (1, 1))
         self.lblTodayGames = Label("Игры за сегодня", (0, 0), (1, 1))
         self.resultsView = ResultView((0, 0), (100, 100))
@@ -30,15 +28,16 @@ class SceneToday(scene.Scene):
 
     def update(self, dt):
         super().update(dt)
-        self.resultsView.update()
+        self.resultsView.update(dt)
         self.lblName.update(dt)
         self.lblTodayGames.update(dt)
 
-    def draw(self, screen):
-        screen.fill(conf.bgColor)
-        self.lblName.draw(screen)
-        self.lblTodayGames.draw(screen)
-        self.resultsView.draw(screen)
+    def draw(self, surface):
+        super().draw(surface)
+        surface.fill(conf.bgColor)
+        self.lblName.draw(surface)
+        self.lblTodayGames.draw(surface)
+        self.resultsView.draw(surface)
 
     def key_up(self, key):
         if key == pygame.K_ESCAPE:
@@ -69,24 +68,26 @@ class SceneToday(scene.Scene):
             log.info("Выбрали дату вперед %s", self.historyIndex)
         elif key == pygame.K_UP:
             log.info("Up pressed")
-            self.resultsView.keyUp()
+            self.resultsView.rect.y += -self.resultsView.boxHeight*2
+            self.resultsView._dirty = True
         elif key == pygame.K_DOWN:
             log.info("Down pressed")
-            self.resultsView.keyDown()
+            self.resultsView.rect.y -= -self.resultsView.boxHeight*2
+            self.resultsView._dirty = True
         elif key == pygame.K_p:
             self.resultsView.plot = not self.resultsView.plot
             log.info("Сменили вид представления результатов за сегодня.")
 
     def resize(self):
         super().resize()
-        w, h = int(conf.w*0.3), int(conf.h*0.1)
+        w, h = int(window.rect.w*0.3), int(window.rect.h*0.1)
         self.lblName.resize((0, 0), (w, h))
-        w, h = int(conf.w*0.95), int(conf.h*0.1)
-        x = conf.w/2-w/2
+        w, h = int(window.rect.w*0.95), int(window.rect.h*0.1)
+        x = window.rect.w/2-w/2
         y = int(h*1.1)
         self.lblTodayGames.resize((x, y), (w, h))
-        w, h = conf.w*0.8, conf.h*0.75
-        x, y = (conf.w-w)/2, conf.h-h*1.03
+        w, h = window.rect.w*0.8, window.rect.h*0.75
+        x, y = (window.rect.w-w)/2, window.rect.h-h*1.03
         self.resultsView.resize((x, y), (w, h))
         log.info("Scene Today resized")
 
@@ -96,7 +97,7 @@ class SceneToday(scene.Scene):
         self.lblTodayGames.text = s
         for k, v in today_games_data.get():
             log.debug("#%s [%s]", k, v.__str__())
-        self.resultsView.dirty = True
+        self.resultsView._dirty = True
 
     def entered(self):
         super().entered()

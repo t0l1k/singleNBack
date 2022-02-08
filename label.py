@@ -18,7 +18,7 @@ class Label(Drawable):
             return
         if self.visible:
             self._text = value
-            self.image = self.layout()
+            self._dirty = True
 
     def layout(self):
         image = super().layout()

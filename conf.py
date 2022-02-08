@@ -21,7 +21,6 @@ feedbackOnPreviousMove = True
 
 fieldSize = 3  # ячеек на поле игры 2 и более, 3 классика
 
-w, h = 800, 600  # размер окна при старте приложения
 
 # theme dark
 bgColor = (0, 0, 0)  # цвет фона окна
