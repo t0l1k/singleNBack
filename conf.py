@@ -2,11 +2,11 @@ beginLevel = 1  # начальный уровень
 manualMode = False  # играть только на одном уровне установленном в beginLevel
 toNextLevelGamesCount = 3  # игр для перехода на следующий уровень в режиме на ручнике
 lives = 3  # число попыток
-classicCount = True  # классическое колличесиво ходов
+classicCount = False  # классическое колличесиво ходов
 moves = 5  # базовое число ходов формула moves*level для 4го уровня это 6*4=24 хода
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
 
 timeToNextCell = 3000  # длительность до новой иконки
 timeShowCell = 1500  # длительность показа иконки
@@ -23,9 +23,9 @@ fieldSize = 3  # ячеек на поле игры 2 и более, 3 класс
 
 
 # theme dark
-bgColor = (0, 0, 0)  # цвет фона окна
+bgColor = (36, 36, 36)  # цвет фона окна
 fgColor = (255, 255, 255)  # цвет текста
-cellBgColor = bgColor  # цвет фона поля ячейки
+cellBgColor = (0, 0, 0)  # цвет фона поля ячейки
 cellFgColor = (0, 255, 255)  # цвет полос поля ячейки
 cellActiveColor = (255, 255, 0)  # цвет показа ячейки
 regularColor = (0, 0, 128)  # цвет отклика пользователя

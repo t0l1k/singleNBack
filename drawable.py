@@ -5,8 +5,6 @@ import callback
 
 class Drawable:
     def __init__(self, pos, size, bg=conf.bgColor, fg=conf.fgColor):
-        self.parent = None
-        self.childrens = []
         self.rect = pygame.rect.Rect(pos, size)
         self._bg = bg
         self._fg = fg
@@ -15,10 +13,6 @@ class Drawable:
         self.image = None
         self.onKeyUp = callback.Signal()
         self.onKeyDown = callback.Signal()
-
-    def addChild(self, child):
-        self.childrens.append(child)
-        child.parent = self
 
     @property
     def bg(self):
@@ -29,9 +23,6 @@ class Drawable:
         if self._bg == value:
             return
         if self.visible:
-            for child in self.childrens:
-                child._bg = value
-                child._dirty = True
             self._bg = value
             self._dirty = True
 
@@ -44,9 +35,6 @@ class Drawable:
         if self._fg == value:
             return
         if self.visible:
-            for child in self.childrens:
-                child._fg = value
-                child._dirty = True
             self._fg = value
             self._dirty = True
 
@@ -58,31 +46,20 @@ class Drawable:
     def visible(self, value):
         self._visible = value
         if value:
-            for child in self.childrens:
-                child._visible = value
-                child._dirty = True
             self._dirty = True
 
     def layout(self):
         return pygame.Surface(self.rect.size, pygame.SRCALPHA)
 
     def update(self, dt):
-        for child in self.childrens:
-            child.update(dt)
+        pass
 
     def draw(self, surface):
         if self._dirty:
             self.image = self.layout()
             self._dirty = False
-        for child in self.childrens:
-            if child._dirty:
-                child.image = child.layout()
-                child._dirty = False
         if self._visible:
             surface.blit(self.image, self.rect)
-            for child in self.childrens:
-                if child._visible:
-                    surface.blit(child.image, child.rect)
 
     def resize(self, pos, size):
         rect = pygame.Rect(pos, size)

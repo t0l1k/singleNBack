@@ -4,7 +4,7 @@ from drawable import Drawable
 
 
 class Cell(Drawable):
-    def __init__(self, pos, size, isCenter, bg=conf.bgColor, fg=conf.fgColor):
+    def __init__(self, pos, size, isCenter, bg=conf.cellBgColor, fg=conf.cellFgColor):
         super().__init__(pos, size, bg, fg)
         self.isCenter = isCenter
         self.margin = int(size[0]*0.12)

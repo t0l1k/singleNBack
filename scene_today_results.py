@@ -5,21 +5,23 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
 import pygame
 import conf
+from drawable import Drawable
 import window
 import today_games_data
 from label import Label
 import logging
 
+log = logging.getLogger(__name__)
 
-class ResultView:
-    def __init__(self, pos, size, boxHeight=20,  plot=False, plot2=False) -> None:
-        self.pos = pos
-        self.image = pygame.Surface(size)
+
+class ResultView(Drawable):
+    def __init__(self, pos, size, boxHeight=20,  plot=False, plot2=False, bg=conf.bgColor, fg=conf.fgColor):
+        super().__init__(pos, size, bg, fg)
         self.boxHeight = boxHeight
         self._rows = 1
-        self.rect = self.image.get_rect()
         self._plot = plot
         self.plot2 = plot2
+        self.resize(pos, size)
 
     def layout(self):
         if self.plot:
@@ -35,10 +37,10 @@ class ResultView:
             a, b = self.getAspectRatio()
             image = createPlot2(dpi, data, a, b)
         else:
-            self.board = pygame.Surface(
+            board = pygame.Surface(
                 (self.rect.w, getLabelHeiht(self.rect.h, self.rows)[0]), pygame.SRCALPHA)
-            self.board_rect = self.board.get_rect()
-            pygame.draw.rect(self.board, conf.cellActiveColor,
+            board_rect = board.get_rect()
+            pygame.draw.rect(board, conf.cellActiveColor,
                              self.rect, border_radius=8)
             boxWidth = self.rect.w//self.rows
             boxHeight = getLabelHeiht(self.rect.h, self.rows)[1]
@@ -56,10 +58,9 @@ class ResultView:
                     l.bg = conf.errorColor
                 else:
                     l.bg = conf.correctColor
-                l.draw(self.board)
-            self.rect.clamp_ip(self.board_rect)
-            image = self.board.subsurface(self.rect)
-        self._dirty = False
+                l.draw(board)
+            self.rect.clamp_ip(board_rect)
+            image = board.subsurface(self.rect)
         return image
 
     def getAspectRatio(self):
@@ -75,18 +76,15 @@ class ResultView:
         a -= 1
         return a, b
 
-    def update(self, dt):
+    def draw(self, surface):
         if self._dirty:
             self.image = self.layout()
-
-    def draw(self, screen):
-        screen.blit(self.image, self.pos)
+            self._dirty = False
+        surface.blit(self.image, self.pos)
 
     def resize(self, pos, size):
+        super().resize(pos, size)
         self.pos = pos
-        self.image = pygame.Surface(size)
-        self.rect = self.image.get_rect()
-        self._dirty = True
 
     @property
     def rows(self):

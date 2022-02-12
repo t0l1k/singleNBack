@@ -30,40 +30,37 @@ class SceneGame(Scene):
             self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
         self.sessionTimer.reset()
-        if not conf.feedbackOnPreviousMove or conf.manualMode:
-            self.lblTimer.visible = False
 
     def resultsStart(self):
-        self.gameResults = GameResult()
+        self.gameResults = GameResult((0, 0), self.rect.size)
 
     def gameStart(self, level, lives):
-        self.game = GameLogic(today_games_data.getGameCount(), level, lives)
+        self.game = GameLogic((0, 0), self.rect.size,
+                              today_games_data.getGameCount(), level, lives)
         self.game.start()
 
     def update(self, dt):
         self.sessionTimer.update()
-        self.lblTimer.bg = self.game.bgColor
-        self.lblTimer.text = self.sessionTimer.__str__()
         if not self.game.inGame and not self.gameResults.inGame:
             log.debug("После завершения игры, передать результаты")
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
-            if not conf.feedbackOnPreviousMove or conf.manualMode:
-                self.lblTimer.visible = True
         if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
             self.startNewGame()
         if self.game.inGame:
-            self.game.update()
+            self.game.update(dt)
         elif self.gameResults.inGame:
-            self.gameResults.update()
-        self.lblTimer.update(dt)
+            self.gameResults.update(dt)
+            self.lblTimer.bg = self.game.bgColor
+            self.lblTimer.text = self.sessionTimer.__str__()
+            self.lblTimer.update(dt)
 
     def draw(self, screen):
         if self.game.inGame:
             self.game.draw(screen)
         elif self.gameResults.inGame:
             self.gameResults.draw(screen)
-        self.lblTimer.draw(screen)
+            self.lblTimer.draw(screen)
 
     def key_up(self, key):
         super().key_up(key)
@@ -77,8 +74,6 @@ class SceneGame(Scene):
 
     def startNewGame(self):
         self.gameResults.inGame = False
-        if not conf.feedbackOnPreviousMove or conf.manualMode:
-            self.lblTimer.visible = False
         level = today_games_data.getLevelFromGame(
             today_games_data.getGameCount())
         lives = today_games_data.getLivesFromGame(
@@ -92,9 +87,15 @@ class SceneGame(Scene):
 
     def resize(self):
         super().resize()
-        if self.game != None:
-            self.game.resize()
-            self.gameResults.resize()
         w, h = int(window.rect.w*0.2), int(window.rect.h*0.08)
         self.lblTimer.resize(
             (window.rect.w/2-w/2, window.rect.h-h), (w, h))
+        if self.game != None:
+            ww = window.rect.w
+            hh = window.rect.h-h
+            pos, size = (0, 0), (ww, hh)
+            self.gameResults.resize(pos, size)
+            self.game.resize(pos, size)
+            if not conf.feedbackOnPreviousMove or conf.manualMode:
+                pos, size = (0, 0), (window.rect.w, window.rect.h)
+                self.game.resize(pos, size)

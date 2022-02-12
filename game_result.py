@@ -1,7 +1,7 @@
 import pygame
+from drawable import Drawable
 import scene
 import conf
-import window
 import today_games_data
 from label import Label
 import logging
@@ -9,17 +9,17 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class GameResult:
-    def __init__(self) -> None:
+class GameResult(Drawable):
+    def __init__(self, pos, size, bg=conf.bgColor, fg=conf.fgColor):
+        super().__init__(pos, size, bg, fg)
         self.inGame = False
-        self.bgColor = conf.bgColor
+        self.bgColor = bg
         self.pauseTime = conf.timePause*1000
         self.pauseTimer = pygame.time.get_ticks()
-
         self.lblName = Label("Result", (0, 0), (1, 1), bg=self.bgColor)
         self.lblResults = Label("---", (0, 0), (1, 1), bg=self.bgColor)
         self.lblTimer = Label("---", (0, 0), (1, 1), bg=self.bgColor)
-        self.resize()
+        self.resize(pos, size)
 
     def setup(self, color):
         self.bgColor = color
@@ -36,7 +36,7 @@ class GameResult:
         self.lblTimer.bg = self.bgColor
         self.inGame = True
 
-    def update(self):
+    def update(self, dt):
         if self.inGame:
             if self.isPaused():
                 if self.lblTimer.visible:
@@ -50,11 +50,11 @@ class GameResult:
     def isPaused(self):
         return pygame.time.get_ticks()-self.pauseTimer > self.pauseTime
 
-    def draw(self, screen):
-        screen.fill(self.bgColor)
-        self.lblName.draw(screen)
-        self.lblResults.draw(screen)
-        self.lblTimer.draw(screen)
+    def draw(self, surface):
+        surface.fill(self.bgColor)
+        self.lblName.draw(surface)
+        self.lblResults.draw(surface)
+        self.lblTimer.draw(surface)
 
     def keyPressed(self):
         if not self.isPaused():
@@ -66,14 +66,15 @@ class GameResult:
         log.info("Выход со сцены результатов")
         return True
 
-    def resize(self):
-        w, h = int(window.rect.w*0.2), int(window.rect.h*0.08)
+    def resize(self, pos, size):
+        super().resize(pos, size)
+        w, h = int(size[0]*0.2), int(size[1]*0.08)
         self.lblName.resize((0, 0), (w, h))
-        w = int(window.rect.w*0.95)
-        x = window.rect.w/2-w/2
-        y = window.rect.h/2-h/2
+        w = int(size[0]*0.95)
+        x = size[0]/2-w/2
+        y = size[1]/2-h/2
         self.lblResults.resize((x, y), (w, h))
-        w, h = int(window.rect.w*0.3), int(window.rect.h*0.3)
-        x = window.rect.w/2-w/2
-        y = window.rect.h/4-h/2
+        w, h = int(size[0]*0.3), int(size[1]*0.3)
+        x = size[0]/2-w/2
+        y = size[1]/4-h/2
         self.lblTimer.resize((x, y), (w, h))

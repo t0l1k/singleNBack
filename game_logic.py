@@ -5,20 +5,21 @@ import conf
 from board import Board
 import logging
 import time
+from drawable import Drawable
 from today_games_data import GameData
 
 
 log = logging.getLogger(__name__)
 
 
-class GameLogic:
+class GameLogic(Drawable):
     # Классический nback, есть поле 3х3 в нем появляются иконки и при повторе n-шагов назад отметить повтор, после завершения сессии выдать результат, при проценте выше 80 переход на следующий уровень, при проценте ниже 50 повтор этого же уровня в три попытки, если попытки исчерпаны, переход на уровень ниже.
-
-    def __init__(self, count, level, lives) -> None:
+    def __init__(self, pos, size, count, level, lives, bg=conf.bgColor, fg=conf.fgColor):
+        super().__init__(pos, size, bg, fg)
         self.gameCount = count
         self.level = level
         self.lives = lives
-        self.board = Board(self.getArr())
+        self.board = Board(pos, size, self.getArr())
 
     def start(self):
         self.inGame = True
@@ -90,7 +91,7 @@ class GameLogic:
             self.resetLevel = True
         self.pressed = False
 
-    def update(self):
+    def update(self, dt):
         if self.inGame:
             if self.getTick()-self.lastTimeToNextCellCheck > self.timeToNextCell:
                 # показать новую клетку
@@ -113,8 +114,11 @@ class GameLogic:
                         log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
-            self.board.update(0)
+            self.board.update(dt)
         self.setLabels()
+
+    def getTick(self):
+        return pygame.time.get_ticks()
 
     def sendGameResult(self):
         log.info("узнать результаты игры")
@@ -143,7 +147,7 @@ class GameLogic:
         return int(a*100/(a+b))
 
     def setLabels(self):
-        self.board.setBgColor(self.bgColor)
+        self.board.bgColor = self.bgColor
         self.board.lblLevel.text = "#" + \
             str(self.gameCount)+" N-Back "+str(self.level)
         self.board.lblMove.text = str(self.moveCount)
@@ -153,30 +157,14 @@ class GameLogic:
         screen.fill(self.bgColor)
         self.board.draw(screen)
 
-    def getTick(self):
-        return pygame.time.get_ticks()
-
-    def resize(self):
-        self.board.resize()
-
-    def getNextArr(self):
-        arr = []
-        while(len(arr) < self.getTotalMoves()):
-            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
-        return arr
-
-    def checkRandomRepition(self, arr):
-        count = 0
-        for i, v in enumerate(arr):
-            nextMove = i+self.level
-            if nextMove > len(arr)-1:
-                break
-            if v == arr[nextMove]:
-                count += 1
-        percent = int(100*count/len(arr))
-        return percent > conf.RR and percent < 80, percent
+    def resize(self, pos, size):
+        super().resize(pos, size)
+        self.board.resize(pos, size)
 
     def getArr(self):
+        # Сгенерировать поле для игры, по настройкам
+        # RR сколько процентов повторов
+        # timeoutRR сколько времени на генерацию поля
         pause = conf.timeoutRR
         start = time.monotonic()
         count = 0
@@ -195,3 +183,20 @@ class GameLogic:
             return best
         log.info("Game selected with RR:%s", percent)
         return arr
+
+    def getNextArr(self):
+        arr = []
+        while(len(arr) < self.getTotalMoves()):
+            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
+        return arr
+
+    def checkRandomRepition(self, arr):
+        count = 0
+        for i, v in enumerate(arr):
+            nextMove = i+self.level
+            if nextMove > len(arr)-1:
+                break
+            if v == arr[nextMove]:
+                count += 1
+        percent = int(100*count/len(arr))
+        return percent > conf.RR and percent < 80, percent
