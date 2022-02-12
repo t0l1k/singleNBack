@@ -86,8 +86,8 @@ class SceneToday(scene.Scene):
         x = window.rect.w/2-w/2
         y = int(h*1.1)
         self.lblTodayGames.resize((x, y), (w, h))
-        w, h = window.rect.w*0.8, window.rect.h*0.75
-        x, y = (window.rect.w-w)/2, window.rect.h-h*1.03
+        w, h = window.rect.w*0.8, window.rect.h*0.65
+        x, y = (window.rect.w-w)/2, window.rect.h-h*1.2
         self.resultsView.resize((x, y), (w, h))
         log.info("Scene Today resized")
 

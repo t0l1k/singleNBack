@@ -1,10 +1,8 @@
 import datetime
-import random
 import pygame
 import conf
 from board import Board
 import logging
-import time
 from drawable import Drawable
 from today_games_data import GameData
 
@@ -14,17 +12,17 @@ log = logging.getLogger(__name__)
 
 class GameLogic(Drawable):
     # Классический nback, есть поле 3х3 в нем появляются иконки и при повторе n-шагов назад отметить повтор, после завершения сессии выдать результат, при проценте выше 80 переход на следующий уровень, при проценте ниже 50 повтор этого же уровня в три попытки, если попытки исчерпаны, переход на уровень ниже.
-    def __init__(self, pos, size, count, level, lives, bg=conf.bgColor, fg=conf.fgColor):
+    def __init__(self, pos, size, count=0, level=1, lives=0, arr=None, bg=conf.bgColor, fg=conf.fgColor):
         super().__init__(pos, size, bg, fg)
         self.gameCount = count
         self.level = level
         self.lives = lives
-        self.board = Board(pos, size, self.getArr())
+        self.board = Board(pos, size, arr)
 
     def start(self):
         self.inGame = True
         self.moves = []
-        self.moveCount = self.getTotalMoves()
+        self.moveCount = GameLogic.getTotalMoves(self.level)
         self.pressed = False
         self.board.setNewActiveCell()
         self.board.cellOff()
@@ -47,13 +45,6 @@ class GameLogic(Drawable):
         self.delayEnd = self.beginNewCell+self.delayBeforeShow
         self.lastTimeToNextCellCheck = self.getTick()
 
-    def getTotalMoves(self):
-        # вычислить число ходов на основе константы maxMoves
-        result = conf.moves*self.level
-        if conf.classicCount:
-            result = self.level*self.level+20
-        return result
-
     def keyPressed(self):
         self.pressed = True
         if conf.feedbackOnPreviousMove:
@@ -62,7 +53,7 @@ class GameLogic(Drawable):
     def checkLastMove(self):
         if len(self.moves) > self.level:
             # уже есть что анализировать на правильный ход
-            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, self.getTotalMoves()-self.moveCount, self.moves[len(
+            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, GameLogic.getTotalMoves(self.level)-self.moveCount, self.moves[len(
                 self.moves)-self.level-1:len(self.moves)], self.board.lastActiveCellNr, self.moves[len(self.moves)-1-self.level])
             log.debug(s+" пауза:%s", self.timeToNextCell)
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
@@ -125,7 +116,7 @@ class GameLogic(Drawable):
         return GameData(
             self.level,
             self.lives,
-            self.getTotalMoves() - self.moveCount,
+            GameLogic.getTotalMoves(self.level) - self.moveCount,
             self.countCorrect, self.countWrong,
             self.getPercent(),
             True,
@@ -161,42 +152,9 @@ class GameLogic(Drawable):
         super().resize(pos, size)
         self.board.resize(pos, size)
 
-    def getArr(self):
-        # Сгенерировать поле для игры, по настройкам
-        # RR сколько процентов повторов
-        # timeoutRR сколько времени на генерацию поля
-        pause = conf.timeoutRR
-        start = time.monotonic()
-        count = 0
-        check = False
-        max = 0
-        best = []
-        while count < 100000 and time.monotonic()-start < pause and not check:
-            arr = self.getNextArr()
-            check, percent = self.checkRandomRepition(arr)
-            if percent > max:
-                max = percent
-                best = arr
-            count += 1
-        if not check:
-            log.info("Game selected with RR:%s", max)
-            return best
-        log.info("Game selected with RR:%s", percent)
-        return arr
-
-    def getNextArr(self):
-        arr = []
-        while(len(arr) < self.getTotalMoves()):
-            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
-        return arr
-
-    def checkRandomRepition(self, arr):
-        count = 0
-        for i, v in enumerate(arr):
-            nextMove = i+self.level
-            if nextMove > len(arr)-1:
-                break
-            if v == arr[nextMove]:
-                count += 1
-        percent = int(100*count/len(arr))
-        return percent > conf.RR and percent < 80, percent
+    def getTotalMoves(level):
+        # вычислить число ходов на основе константы maxMoves
+        result = conf.moves*level
+        if conf.classicCount:
+            result = level*level+20
+        return result

@@ -1,7 +1,7 @@
 import os
 import pickle
 import conf
-import logging 
+import logging
 from datetime import datetime
 from gamedata import GameData
 import scene_game_timer
@@ -33,6 +33,27 @@ def countPlayTime():
     s = "{:>02}:{:>02}.{:>03}".format(
         t0//1000//60, t0//1000 % 60, t0 % 1000)
     return s
+
+
+def getLastGameArr():
+    count = getSize()-1
+    if not(isDoneGame(count)):
+        count -= 1
+    return getArrFromGame(count)
+
+
+def getLastGameLevel():
+    count = getSize()-1
+    if not(isDoneGame(count)):
+        count -= 1
+    return getLevelFromGame(count)
+
+
+def getLastGameLives():
+    count = getSize()-1
+    if not(isDoneGame(count)):
+        count -= 1
+    return getLivesFromGame(count)
 
 
 def getDoneLevelsStr():
@@ -223,6 +244,11 @@ def getLevelFromGame(nr):
 def getLivesFromGame(nr):
     """param nr: Узнать число попыток по номеру игры"""
     return __todayGamesData[nr].lives
+
+
+def getArrFromGame(nr):
+    """param nr: Узнать массив ходов по номеру игры"""
+    return __todayGamesData[nr].field
 
 
 def getPercentFromGame(nr):

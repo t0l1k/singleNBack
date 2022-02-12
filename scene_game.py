@@ -7,6 +7,7 @@ import logging
 from game_logic import GameLogic
 from game_result import GameResult
 from label import Label
+from gen_arr import Arr
 
 
 log = logging.getLogger(__name__)
@@ -22,22 +23,38 @@ class SceneGame(Scene):
 
     def entered(self):
         super().entered()
-        if today_games_data.getSize() > 0:  # загрузить последний уровень и попытки
-            last = today_games_data.getSize()-1
-            self.gameStart(today_games_data.getLevelFromGame(last),
-                           today_games_data.getLivesFromGame(last))
-        else:
-            self.gameStart(conf.beginLevel, conf.lives)
         self.resultsStart()
         self.sessionTimer.reset()
+        if today_games_data.getSize() > 0:  # загрузить последний уровень и попытки
+            self.startNewGame(True)
+        else:
+            self.gameStart(conf.beginLevel, conf.lives, False)
 
     def resultsStart(self):
         self.gameResults = GameResult((0, 0), self.rect.size)
 
-    def gameStart(self, level, lives):
+    def gameStart(self, level, lives, reset):
+        if not reset:
+            arr = Arr(level, GameLogic.getTotalMoves(level)).get()
+        else:
+            arr = today_games_data.getLastGameArr()
+            level = today_games_data.getLastGameLevel()
+            lives = today_games_data.getLastGameLives()
+            print(arr, level, lives)
         self.game = GameLogic((0, 0), self.rect.size,
-                              today_games_data.getGameCount(), level, lives)
+                              count=today_games_data.getGameCount(), level=level, lives=lives, arr=arr)
         self.game.start()
+
+    def startNewGame(self, reset):
+        self.gameResults.inGame = False
+        level = today_games_data.getLevelFromGame(
+            today_games_data.getGameCount())
+        lives = today_games_data.getLivesFromGame(
+            today_games_data.getGameCount())
+        if reset:
+            self.gameStart(level, lives, False)
+        else:
+            self.gameStart(level, lives, True)
 
     def update(self, dt):
         self.sessionTimer.update()
@@ -46,7 +63,7 @@ class SceneGame(Scene):
             today_games_data.setDataDoneGame(self.game.sendGameResult())
             self.gameResults.setup(self.game.bgColor)
         if self.gameResults.inGame and self.gameResults.isPaused() and conf.autoToNextLevel:
-            self.startNewGame()
+            self.startNewGame(True)
         if self.game.inGame:
             self.game.update(dt)
         elif self.gameResults.inGame:
@@ -70,15 +87,12 @@ class SceneGame(Scene):
             elif self.gameResults.inGame:
                 if self.gameResults.keyPressed():
                     log.debug("запустить новую игру")
-                    self.startNewGame()
-
-    def startNewGame(self):
-        self.gameResults.inGame = False
-        level = today_games_data.getLevelFromGame(
-            today_games_data.getGameCount())
-        lives = today_games_data.getLivesFromGame(
-            today_games_data.getGameCount())
-        self.gameStart(level, lives)
+                    self.startNewGame(True)
+        if key == pygame.K_RETURN:
+            if self.gameResults.inGame:
+                if self.gameResults.keyPressed():
+                    log.debug("перезапустить последнюю игру")
+                    self.startNewGame(False)
 
     def quit(self):
         self.sessionTimer.pause()

@@ -2,11 +2,11 @@ beginLevel = 1  # начальный уровень
 manualMode = False  # играть только на одном уровне установленном в beginLevel
 toNextLevelGamesCount = 3  # игр для перехода на следующий уровень в режиме на ручнике
 lives = 3  # число попыток
-classicCount = False  # классическое колличесиво ходов
+classicCount = True  # классическое колличесиво ходов
 moves = 5  # базовое число ходов формула moves*level для 4го уровня это 6*4=24 хода
 nextLevelPercent = 80  # процент перехода при успехе
 dropLevelPercent = 50  # процент перехода при поражении
-resetLevelOnFirstWrong = True  # сбросить уровень при первой ошибке
+resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
 
 timeToNextCell = 3000  # длительность до новой иконки
 timeShowCell = 1500  # длительность показа иконки

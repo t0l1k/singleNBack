@@ -41,8 +41,6 @@ class GameResult(Drawable):
             if self.isPaused():
                 if self.lblTimer.visible:
                     self.lblTimer.visible = False
-                    if not conf.autoToNextLevel:
-                        scene.pop()
             else:
                 self.lblTimer.text = str(
                     self.pauseTime//1000-(pygame.time.get_ticks()-self.pauseTimer)//1000)

@@ -6,6 +6,8 @@ import today_games_data
 from label import Label
 import logging
 from scene_today_results import ResultView
+import scene
+from scene_game import SceneGame
 
 log = logging.getLogger(__name__)
 
@@ -30,7 +32,7 @@ class SceneScore(Scene):
         if key == pygame.K_SPACE:
             if today_games_data.useHistory:
                 today_games_data.loadData()
-            self.app.setSceneGame()
+            scene.push(SceneGame())
 
     def resize(self):
         w, h = int(window.rect.w*0.3), int(window.rect.h*0.1)
