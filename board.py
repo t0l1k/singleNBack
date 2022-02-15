@@ -89,18 +89,19 @@ class Board(Drawable):
     def resize(self, pos, size):
         super().resize(pos, size)
         w, h = size
-        wW, hH = int(w*0.3), int(h*0.08)
+        wW, hH = int(w*0.3), int(h*0.05)
         self.lblLevel.resize((0, 0), (wW, hH))
         self.lblMove.resize((window.rect.w-wW, 0), (wW, hH))
         self.lblLives.resize((window.rect.w/2-wW/2, 0), (wW, hH))
         dim = conf.fieldSize
+        h = h-hH
         wSize = h if w > h else w
-        cellSize = wSize/(dim+1)
-        marginX = w/2 - (cellSize*dim)/2
-        marginY = h/2 - (cellSize*dim)/2
+        cellSize = wSize//(dim+0.1)
+        marginX = w//2 - (cellSize*dim)//2
+        marginY = h//2 - (cellSize*dim)//2
         for i, cell in enumerate(self.field):
             x = i % dim
             y = i//dim
             cellX = x*cellSize+marginX
-            cellY = y*cellSize+marginY
+            cellY = y*cellSize+marginY+hH
             cell.resize([cellX, cellY], [cellSize, cellSize])

@@ -28,7 +28,6 @@ class SceneToday(scene.Scene):
 
     def update(self, dt):
         super().update(dt)
-        self.resultsView.update(dt)
         self.lblName.update(dt)
         self.lblTodayGames.update(dt)
 
@@ -80,9 +79,9 @@ class SceneToday(scene.Scene):
 
     def resize(self):
         super().resize()
-        w, h = int(window.rect.w*0.3), int(window.rect.h*0.1)
+        w, h = int(window.rect.w*0.3), int(window.rect.h*0.05)
         self.lblName.resize((0, 0), (w, h))
-        w, h = int(window.rect.w*0.95), int(window.rect.h*0.1)
+        w, h = int(window.rect.w*0.95), int(window.rect.h*0.08)
         x = window.rect.w/2-w/2
         y = int(h*1.1)
         self.lblTodayGames.resize((x, y), (w, h))

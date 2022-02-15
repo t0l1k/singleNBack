@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import matplotlib.backends.backend_agg as agg
 import pygame
 import conf
-from drawable import Drawable
 import window
 import today_games_data
 from label import Label
@@ -14,9 +13,8 @@ import logging
 log = logging.getLogger(__name__)
 
 
-class ResultView(Drawable):
+class ResultView:
     def __init__(self, pos, size, boxHeight=20,  plot=False, plot2=False, bg=conf.bgColor, fg=conf.fgColor):
-        super().__init__(pos, size, bg, fg)
         self.boxHeight = boxHeight
         self._rows = 1
         self._plot = plot
@@ -83,8 +81,9 @@ class ResultView(Drawable):
         surface.blit(self.image, self.pos)
 
     def resize(self, pos, size):
-        super().resize(pos, size)
         self.pos = pos
+        self.rect = pygame.Rect((0, 0), size)
+        self._dirty = True
 
     @property
     def rows(self):

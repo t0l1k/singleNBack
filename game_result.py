@@ -66,9 +66,9 @@ class GameResult(Drawable):
 
     def resize(self, pos, size):
         super().resize(pos, size)
-        w, h = int(size[0]*0.2), int(size[1]*0.08)
+        w, h = int(size[0]*0.3), int(size[1]*0.05)
         self.lblName.resize((0, 0), (w, h))
-        w = int(size[0]*0.95)
+        w, h = int(size[0]*0.95), int(size[1]*0.1)
         x = size[0]/2-w/2
         y = size[1]/2-h/2
         self.lblResults.resize((x, y), (w, h))

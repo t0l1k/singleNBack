@@ -35,7 +35,7 @@ class SceneScore(Scene):
             scene.push(SceneGame())
 
     def resize(self):
-        w, h = int(window.rect.w*0.3), int(window.rect.h*0.1)
+        w, h = int(window.rect.w*0.3), int(window.rect.h*0.05)
         self.lblName.resize((0, 0), (w, h))
         w, h = window.rect.w*0.9, window.rect.h*0.85
         x, y = (window.rect.w-w)/2, window.rect.h-h*1.05

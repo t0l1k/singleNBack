@@ -88,11 +88,36 @@ class SceneGame(Scene):
                 if self.gameResults.keyPressed():
                     log.debug("запустить новую игру")
                     self.startNewGame(True)
-        if key == pygame.K_RETURN:
+        elif key == pygame.K_RETURN:
             if self.gameResults.inGame:
                 if self.gameResults.keyPressed():
                     log.debug("перезапустить последнюю игру")
                     self.startNewGame(False)
+        elif key == pygame.K_F5:
+            if self.game.inGame:
+                conf.feedbackOnPreviousMove = not conf.feedbackOnPreviousMove
+                if not conf.feedbackOnPreviousMove:
+                    self.game.board.lblMove.visible = False
+                    self.game.board.lblLives.visible = False
+                else:
+                    self.game.board.lblMove.visible = True
+                    self.game.board.lblLives.visible = True
+                log.debug("toogle feedback on previous move %s",
+                          conf.feedbackOnPreviousMove)
+        elif key == pygame.K_F1:
+            if self.game.inGame:
+                if conf.timeToNextCell < 5000:
+                    conf.timeToNextCell += conf.incDurrationStep
+                    conf.timeShowCell += conf.incDurrationStep
+                    log.debug("time to next cell %s time show cell %s",
+                              conf.timeToNextCell, conf.timeShowCell)
+        elif key == pygame.K_F2:
+            if self.game.inGame:
+                if conf.timeToNextCell > conf.incDurrationStep*4:
+                    conf.timeToNextCell -= conf.incDurrationStep
+                    conf.timeShowCell -= conf.incDurrationStep
+                    log.debug("time to next cell %s time show cell %s",
+                              conf.timeToNextCell, conf.timeShowCell)
 
     def quit(self):
         self.sessionTimer.pause()
@@ -106,7 +131,7 @@ class SceneGame(Scene):
             (window.rect.w/2-w/2, window.rect.h-h), (w, h))
         if self.game != None:
             ww = window.rect.w
-            hh = window.rect.h-h
+            hh = window.rect.h
             pos, size = (0, 0), (ww, hh)
             self.gameResults.resize(pos, size)
             self.game.resize(pos, size)
