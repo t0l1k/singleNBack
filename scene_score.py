@@ -19,9 +19,6 @@ class SceneScore(Scene):
         self.resultsView = ResultView((0, 0), (100, 100), plot2=True)
         self.resize()
 
-    def update(self, dt):
-        self.resultsView.update(dt)
-
     def draw(self, screen):
         screen.fill(conf.bgColor)
         self.lblName.draw(screen)

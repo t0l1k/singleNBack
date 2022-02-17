@@ -105,6 +105,8 @@ class GameLogic(Drawable):
                         log.debug("игра окончена")
                         self.board.cellOff()
                         self.inGame = False
+            if len(self.moves) < self.level:  # цвет фона regular пока нет ходов для анализа
+                self.bgColor = conf.regularColor
             self.board.update(dt)
         self.setLabels()
 
