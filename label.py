@@ -4,9 +4,10 @@ from drawable import Drawable
 
 
 class Label(Drawable):
-    def __init__(self, text, pos, size, bg=conf.bgColor, fg=conf.fgColor):
+    def __init__(self, text, pos, size, bg=conf.bgColor, fg=conf.fgColor, drawRect=True):
         super().__init__(pos, size, bg, fg)
         self._text = text
+        self.drawRect = drawRect
 
     @property
     def text(self):
@@ -23,8 +24,9 @@ class Label(Drawable):
     def layout(self):
         image = super().layout()
         rect = pygame.Rect((0, 0), (self.rect.size))
-        pygame.draw.rect(image, self.bg, rect, border_radius=8)
-        pygame.draw.rect(image, self.fg, rect, 1, border_radius=8)
+        if self.drawRect:
+            pygame.draw.rect(image, self.bg, rect, border_radius=8)
+            pygame.draw.rect(image, self.fg, rect, 1, border_radius=8)
         font = pygame.font.SysFont(None, self.getFontSize())
         text = font.render(self._text, True, self._fg)
         x = self.rect.w/2-text.get_width()//2
