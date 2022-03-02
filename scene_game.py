@@ -115,7 +115,8 @@ class SceneGame(Scene):
             if self.game.inGame:
                 if conf.timeToNextCell > conf.incDurrationStep*4:
                     conf.timeToNextCell -= conf.incDurrationStep
-                    conf.timeShowCell -= conf.incDurrationStep
+                    if conf.timeShowCell > 500:
+                        conf.timeShowCell -= conf.incDurrationStep
                     log.debug("time to next cell %s time show cell %s",
                               conf.timeToNextCell, conf.timeShowCell)
 

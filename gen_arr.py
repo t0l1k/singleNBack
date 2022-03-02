@@ -38,7 +38,9 @@ class Arr:
     def getNextArr(self):
         arr = []
         while(len(arr) < self.moves):
-            arr.append(random.randint(0, (conf.fieldSize*conf.fieldSize)-1))
+            number = random.randint(0, (conf.fieldSize*conf.fieldSize)-1)
+            if (number != (conf.fieldSize*conf.fieldSize)//2 and not conf.useCenterCell) or conf.useCenterCell:
+                arr.append(number)
         return arr
 
     def checkRandomRepition(self, arr):
