@@ -14,14 +14,10 @@ class Board(Drawable):
         self.idx = 0
         self.lblLevel = Label("---", (0, 0), (1, 1))
         self.lblMove = Label("---", (0, 0), (1, 1))
-        self.lblLives = Label("---", (0, 0), (1, 1))
         self.field = self.createField(size[0], size[1])
         self._bgColor = conf.bgColor
         if not conf.feedbackOnPreviousMove:
             self.lblMove.visible = False
-            self.lblLives.visible = False
-        if conf.manualMode:
-            self.lblLives.visible = False
         self.resize(pos, size)
 
     def createField(self, w, h):
@@ -67,7 +63,6 @@ class Board(Drawable):
     def bgColor(self, color):
         self._bgColor = color
         self.lblMove.bg = self._bgColor
-        self.lblLives.bg = self._bgColor
         self.lblLevel.bg = self._bgColor
         for _, cell in enumerate(self.field):
             cell.bg = self._bgColor
@@ -76,23 +71,20 @@ class Board(Drawable):
         for cell in self.field:
             cell.update(dt)
         self.lblLevel.update(dt)
-        self.lblLives.update(dt)
         self.lblMove.update(dt)
 
     def draw(self, screen):
         self.lblLevel.draw(screen)
         self.lblMove.draw(screen)
-        self.lblLives.draw(screen)
         for cell in self.field:
             cell.draw(screen)
 
     def resize(self, pos, size):
         super().resize(pos, size)
         w, h = size
-        wW, hH = int(w*0.3), int(h*0.05)
+        wW, hH = int(w*0.2), int(h*0.04)
         self.lblLevel.resize((0, 0), (wW, hH))
         self.lblMove.resize((window.rect.w-wW, 0), (wW, hH))
-        self.lblLives.resize((window.rect.w/2-wW/2, 0), (wW, hH))
         dim = conf.fieldSize
         h = h-hH
         wSize = h if w > h else w

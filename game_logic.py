@@ -142,9 +142,9 @@ class GameLogic(Drawable):
     def setLabels(self):
         self.board.bgColor = self.bgColor
         self.board.lblLevel.text = "#" + \
-            str(self.gameCount)+" N-Back "+str(self.level)
+            str(self.gameCount)+" N-Back " + \
+            str(self.level)+" " + "\u2665"*self.lives
         self.board.lblMove.text = str(self.moveCount)
-        self.board.lblLives.text = "Lives: "+str(self.lives)
 
     def draw(self, screen):
         screen.fill(self.bgColor)

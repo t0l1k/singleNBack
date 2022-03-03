@@ -30,8 +30,9 @@ class Cell(Drawable):
     def layoutDefault(self):
         image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
         rect = pygame.Rect((0, 0), self.rect.size)
-        pygame.draw.rect(image, self._bg, rect, border_radius=8)
-        pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)
+        if conf.showGrid:
+            pygame.draw.rect(image, self._bg, rect, border_radius=8)
+            pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)
         self.setDot(image)
         return image
 
@@ -39,22 +40,29 @@ class Cell(Drawable):
         image = pygame.Surface((self.rect.w, self.rect.h), pygame.SRCALPHA)
         image.fill(self._bg)
         rect = pygame.Rect((0, 0), self.rect.size)
-        pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)
+        if conf.showGrid:
+            pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)
         pygame.draw.rect(image, conf.cellActiveColor, (self.margin, self.margin,
                          rect.w-self.margin*2, rect.h-self.margin*2), border_radius=8)
-        self.setDot(image)
+        if not conf.useCenterCell:
+            self.setDot(image)
         return image
 
     def setDot(self, image):
+        if conf.showGrid:
+            margin = int(self.rect.h*0.45)
+        else:
+            margin = int(self.rect.h*0.1)
         if self.isCenter:
-            margin = self.rect.h*0.45
             x1 = self.rect.w/2
             y1 = margin
             x2 = self.rect.w/2
             y2 = self.rect.h - margin
-            pygame.draw.line(image, conf.cellFgColor, (x1, y1), (x2, y2))
+            pygame.draw.line(image, conf.cellFgColor,
+                             (x1, y1), (x2, y2), margin)
             x1 = margin
             y1 = self.rect.h/2
             x2 = self.rect.w-margin
             y2 = self.rect.h/2
-            pygame.draw.line(image, conf.cellFgColor, (x1, y1), (x2, y2))
+            pygame.draw.line(image, conf.cellFgColor,
+                             (x1, y1), (x2, y2), margin)

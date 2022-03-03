@@ -98,10 +98,8 @@ class SceneGame(Scene):
                 conf.feedbackOnPreviousMove = not conf.feedbackOnPreviousMove
                 if not conf.feedbackOnPreviousMove:
                     self.game.board.lblMove.visible = False
-                    self.game.board.lblLives.visible = False
                 else:
                     self.game.board.lblMove.visible = True
-                    self.game.board.lblLives.visible = True
                 log.debug("toogle feedback on previous move %s",
                           conf.feedbackOnPreviousMove)
         elif key == pygame.K_F1:
