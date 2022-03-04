@@ -189,7 +189,7 @@ def calculateNextLevel():
 
 def isMatchesWins():
     nr = getGameCount()
-    if nr < conf.toNextLevelGamesCount-1:
+    if nr < conf.toNextLevelGamesCount-1 or conf.toNextLevelGamesCount == 0:
         return False
     last_level = getLevelFromGame(nr)
     wins = 0
@@ -213,7 +213,7 @@ def add(data: GameData):
 
 def newGame(level, lives):
     """создать новую запись игры"""
-    defaultData = GameData(level, lives, 0, -1, -1, -1, False)
+    defaultData = GameData(level=level, lives=lives)
     add(defaultData)
 
 

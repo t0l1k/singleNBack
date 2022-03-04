@@ -1,8 +1,9 @@
 from datetime import datetime
+import conf
 
 
 class GameData:
-    def __init__(self, level=0, lives=0, moves=0, countCorrect=0, countWrong=0, percent=0, isDone=False, useExtraTry=False, dateBegin=0, dateEnd=0, field=None) -> None:
+    def __init__(self, level=0, lives=0, moves=-1, countCorrect=-1, countWrong=-1, percent=-1, isDone=False, useExtraTry=False, dateBegin=-1, dateEnd=-1, field=None) -> None:
         self._dateBegin = dateBegin
         self._dateEnd = dateEnd
         self._level = level
@@ -14,6 +15,11 @@ class GameData:
         self._isDone = isDone
         self._useExtraTry = useExtraTry
         self._field = field
+        self._gamePreferences = GamePreferences()
+
+    @property
+    def gamePreferences(self):
+        return self._gamePreferences
 
     @property
     def field(self):
@@ -112,4 +118,26 @@ class GameData:
             e = datetime.strftime(self.dateEnd, "%H:%M:%S.%f")[:-3]
         else:
             e = ""
-        return "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} Done:{} [{}] [{}]".format(self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, self.isDone, s, e)
+        ss = ""
+        try:
+            ss = "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} [{}] [{}] {}".format(
+                self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, s, e, self.gamePreferences)
+        except AttributeError:
+            ss = "Level:{} Lives:{} Moves:{} Correct:{} Wrong:{} Percent:{} [{}] [{}]".format(
+                self.level, self.lives, self.moves, self.countCorrect, self.countWrong, self.percent, s, e)
+        finally:
+            return ss
+
+
+class GamePreferences:
+
+    def __init__(self) -> None:
+        self.manual = conf.manualMode
+        self.toNextLevelGamesCount = conf.toNextLevelGamesCount
+        self.nextLevelPercent = conf.nextLevelPercent
+        self.dropLevelPercent = conf.dropLevelPercent
+        self.resetLevelOnFirstWrong = conf.resetLevelOnFirstWrong
+        self.fieldSize = conf.fieldSize
+
+    def __str__(self) -> str:
+        return "Manual: {}, Advance count in Manual:{} Advance: {}, FallBack: {} Reset:{}, Field size: {}".format(self.manual, self.toNextLevelGamesCount, self.nextLevelPercent, self.dropLevelPercent, self.resetLevelOnFirstWrong, self.fieldSize)

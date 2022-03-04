@@ -44,8 +44,7 @@ class Cell(Drawable):
             pygame.draw.rect(image, conf.cellFgColor, rect, 3, border_radius=8)
         pygame.draw.rect(image, conf.cellActiveColor, (self.margin, self.margin,
                          rect.w-self.margin*2, rect.h-self.margin*2), border_radius=8)
-        if not conf.useCenterCell:
-            self.setDot(image)
+        self.setDot(image)
         return image
 
     def setDot(self, image):
@@ -53,16 +52,17 @@ class Cell(Drawable):
             margin = int(self.rect.h*0.45)
         else:
             margin = int(self.rect.h*0.1)
+        thickness = 5
         if self.isCenter:
             x1 = self.rect.w/2
             y1 = margin
             x2 = self.rect.w/2
             y2 = self.rect.h - margin
             pygame.draw.line(image, conf.cellFgColor,
-                             (x1, y1), (x2, y2), margin)
+                             (x1, y1), (x2, y2), thickness)
             x1 = margin
             y1 = self.rect.h/2
             x2 = self.rect.w-margin
             y2 = self.rect.h/2
             pygame.draw.line(image, conf.cellFgColor,
-                             (x1, y1), (x2, y2), margin)
+                             (x1, y1), (x2, y2), thickness)

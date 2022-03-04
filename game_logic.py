@@ -155,8 +155,4 @@ class GameLogic(Drawable):
         self.board.resize(pos, size)
 
     def getTotalMoves(level):
-        # вычислить число ходов на основе константы maxMoves
-        result = conf.moves*level
-        if conf.classicCount:
-            result = level*level+20
-        return result
+        return conf.numTrials+conf.numTrialsFactor*level**conf.numTrialsExponent
