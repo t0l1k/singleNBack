@@ -56,15 +56,6 @@ def getLastGameLives():
     return getLivesFromGame(count)
 
 
-def getDoneLevelsStr():
-    arr = []
-    for k, v in get():
-        if v.isDone:
-            arr.append("#{} Уровень:{} {}% Ходов:{} П:{} О:{}".format(
-                k, v.level, v.percent, v.moves, v.countCorrect, v.countWrong))
-    return arr
-
-
 def parseGamesData():
     # данные для графика игр за сегодня
     x = []
@@ -77,11 +68,11 @@ def parseGamesData():
             result = v.percent*0.01+v.level
             x.append(k)
             y.append(result)
-            if getPercentFromGame(k) >= conf.nextLevelPercent:
+            if getPercentFromGame(k) >= v.gamePreferences.nextLevelPercent:
                 color.append("win")
-            elif getPercentFromGame(k) < conf.dropLevelPercent and useExtraTry(k):
+            elif getPercentFromGame(k) < v.gamePreferences.dropLevelPercent and useExtraTry(k):
                 color.append("extra try")
-            elif getPercentFromGame(k) < conf.dropLevelPercent and not useExtraTry(k):
+            elif getPercentFromGame(k) < v.gamePreferences.dropLevelPercent and not useExtraTry(k):
                 color.append("lost")
             else:
                 color.append("regular")
@@ -166,11 +157,12 @@ def calculateNextLevel():
     percent = getPercentFromGame(getGameCount())
     level = getLevelFromGame(getGameCount())
     lives = getLivesFromGame(getGameCount())
+    settings = getGameSettings(getGameCount())
     extraTry = False
-    if percent >= conf.nextLevelPercent and not conf.manualMode:
+    if percent >= settings.nextLevelPercent and not settings.manual:
         level += 1
         lives = conf.lives
-    elif percent < conf.dropLevelPercent and not conf.manualMode:
+    elif percent < settings.dropLevelPercent and not settings.manual:
         lives -= 1
         extraTry = True
         if lives <= 0:
@@ -180,7 +172,7 @@ def calculateNextLevel():
         if level < 1:
             level = 1
             lives = conf.lives
-    elif conf.manualMode and isMatchesWins():
+    elif settings.manual and isMatchesWins():
         level += 1
     log.debug("Вычислили новый уровень:%s жизней:%s дополнительные попытки:%s",
               level, lives, extraTry)
@@ -289,6 +281,11 @@ def useExtraTry(nr):
 def setExtraTry(nr):
     """param nr: Установить использование дополнительной попытки по номеру игры"""
     __todayGamesData[nr].useExtraTry = True
+
+
+def getGameSettings(nr):
+    """param nr: Получить ссылку на настройки игры"""
+    return __todayGamesData[nr].gamePreferences
 
 
 def getGameDurationStr(nr):

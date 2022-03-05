@@ -167,17 +167,20 @@ class ResultView:
                          self.rect, border_radius=8)
         boxWidth = self.rect.w//self.rows
         boxHeight = getLabelHeiht(self.rect.h, self.rows)[1]
-        s = today_games_data.getDoneLevelsStr()
-        for idx, _ in enumerate(s):
+        for k, v in today_games_data.get():
+            idx = k
+            if v.isDone:
+                s = "#{} Уровень:{} {}% Ходов:{} П:{} О:{}".format(
+                    k, v.level, v.percent, v.moves, v.countCorrect, v.countWrong)
             x = idx % self.rows
             y = idx//self.rows
-            l = Label(s[idx], (x*boxWidth, y*boxHeight),
+            l = Label(s, (x*boxWidth, y*boxHeight),
                       (boxWidth, boxHeight), fg=conf.cellFgColor)
-            if today_games_data.getPercentFromGame(idx) >= conf.nextLevelPercent:
+            if today_games_data.getPercentFromGame(idx) >= v.gamePreferences.nextLevelPercent:
                 l.bg = conf.regularColor
-            elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and today_games_data.useExtraTry(idx):
+            elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and today_games_data.useExtraTry(idx):
                 l.bg = conf.warningColor
-            elif today_games_data.getPercentFromGame(idx) < conf.dropLevelPercent and not today_games_data.useExtraTry(idx):
+            elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and not today_games_data.useExtraTry(idx):
                 l.bg = conf.errorColor
             else:
                 l.bg = conf.correctColor
@@ -210,7 +213,7 @@ class ResultView:
         self.rect = pygame.Rect((0, 0), size)
         self._dirty = True
 
-    @property
+    @ property
     def rows(self):
         result = 3
         if window.rect.w <= 640:
@@ -223,16 +226,16 @@ class ResultView:
             result = 4
         return result
 
-    @rows.setter
+    @ rows.setter
     def rows(self, value):
         self._rows = value
         self._dirty = True
 
-    @property
+    @ property
     def plot(self):
         return self._plot
 
-    @plot.setter
+    @ plot.setter
     def plot(self, value):
         self._plot = value
         self._dirty = True

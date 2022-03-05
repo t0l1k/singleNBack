@@ -19,7 +19,13 @@ class GameData:
 
     @property
     def gamePreferences(self):
-        return self._gamePreferences
+        result = None
+        try:
+            result = self._gamePreferences
+        except AttributeError:
+            self._gamePreferences = GamePreferences()
+            result = self._gamePreferences
+        return result
 
     @property
     def field(self):
@@ -140,4 +146,4 @@ class GamePreferences:
         self.fieldSize = conf.fieldSize
 
     def __str__(self) -> str:
-        return "Manual: {}, Advance count in Manual:{} Advance: {}, FallBack: {} Reset:{}, Field size: {}".format(self.manual, self.toNextLevelGamesCount, self.nextLevelPercent, self.dropLevelPercent, self.resetLevelOnFirstWrong, self.fieldSize)
+        return "Settings[M:{},AM:{}Adv:{},Fb:{}RfE:{},Sz:{}]".format(self.manual, self.toNextLevelGamesCount, self.nextLevelPercent, self.dropLevelPercent, self.resetLevelOnFirstWrong, self.fieldSize)
