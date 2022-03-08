@@ -2,6 +2,7 @@ import os
 import pickle
 import conf
 import logging
+import game_logic
 from datetime import datetime
 from gamedata import GameData
 import scene_game_timer
@@ -58,16 +59,17 @@ def getLastGameLives():
 
 def parseGamesData():
     # данные для графика игр за сегодня
-    x = []
-    y = []
+    gameNr = []
+    levelValue = []
     color = []
     percent = []
     level = []
+    movesPercent = []
     for k, v in get():
         if v.isDone:
             result = v.percent*0.01+v.level
-            x.append(k)
-            y.append(result)
+            gameNr.append(k)
+            levelValue.append(result)
             if getPercentFromGame(k) >= v.gamePreferences.nextLevelPercent:
                 color.append("win")
             elif getPercentFromGame(k) < v.gamePreferences.dropLevelPercent and useExtraTry(k):
@@ -78,7 +80,15 @@ def parseGamesData():
                 color.append("regular")
             percent.append(v.percent)
             level.append(v.level)
-    return [x, y, color, percent, level]
+            moves = v.moves
+            try:
+                totalMoves = v.totalMoves
+            except AttributeError:
+                totalMoves = game_logic.getTotalMoves(v.level)
+            percentMoves = moves*100/totalMoves
+            lvlMoves = round(v.level*percentMoves/100, 2)
+            movesPercent.append(lvlMoves)
+    return [gameNr, levelValue, color, percent, level, movesPercent]
 
 
 def parseHistoryForPlot():

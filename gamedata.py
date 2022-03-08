@@ -1,5 +1,6 @@
-from datetime import datetime
 import conf
+import game_logic
+from datetime import datetime
 
 
 class GameData:
@@ -8,6 +9,7 @@ class GameData:
         self._dateEnd = dateEnd
         self._level = level
         self._lives = lives
+        self.totalMoves = game_logic.getTotalMoves(level)
         self._moves = moves
         self._countCorrect = countCorrect
         self._countWrong = countWrong

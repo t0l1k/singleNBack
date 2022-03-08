@@ -4,7 +4,7 @@ import conf
 from board import Board
 import logging
 from drawable import Drawable
-from today_games_data import GameData
+from gamedata import GameData
 
 
 log = logging.getLogger(__name__)
@@ -22,7 +22,7 @@ class GameLogic(Drawable):
     def start(self):
         self.inGame = True
         self.moves = []
-        self.moveCount = GameLogic.getTotalMoves(self.level)
+        self.moveCount = getTotalMoves(self.level)
         self.pressed = False
         self.board.setNewActiveCell()
         self.board.cellOff()
@@ -54,7 +54,7 @@ class GameLogic(Drawable):
     def checkLastMove(self):
         if len(self.moves) > self.level:
             # уже есть что анализировать на правильный ход
-            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, GameLogic.getTotalMoves(self.level)-self.moveCount, self.moves[len(
+            s = "#{} nB{} ход:{} {} {}-{}".format(self.gameCount, self.level, getTotalMoves(self.level)-self.moveCount, self.moves[len(
                 self.moves)-self.level-1:len(self.moves)], self.board.lastActiveCellNr, self.moves[len(self.moves)-1-self.level])
             log.debug(s+" пауза:%s", self.timeToNextCell)
             if self.moves[len(self.moves)-1-self.level] == self.board.lastActiveCellNr:
@@ -119,7 +119,7 @@ class GameLogic(Drawable):
         return GameData(
             self.level,
             self.lives,
-            GameLogic.getTotalMoves(self.level) - self.moveCount,
+            getTotalMoves(self.level) - self.moveCount,
             self.countCorrect, self.countWrong,
             self.getPercent(),
             True,
@@ -155,5 +155,6 @@ class GameLogic(Drawable):
         super().resize(pos, size)
         self.board.resize(pos, size)
 
-    def getTotalMoves(level):
-        return conf.numTrials+conf.numTrialsFactor*level**conf.numTrialsExponent
+
+def getTotalMoves(level):
+    return conf.numTrials+conf.numTrialsFactor*level**conf.numTrialsExponent

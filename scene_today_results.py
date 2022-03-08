@@ -36,7 +36,7 @@ class ResultView:
 
     def layoutGraphTodayResults(self):
         data = today_games_data.parseGamesData()
-        xArr, yArr, colorsArr, percentsArr, levelsArr = data
+        xArr, yArr, colorsArr, percentsArr, levelsArr, movesPercent = data
         axisXMax = len(xArr)
         maxLevel = 0
         for level in levelsArr:
@@ -128,6 +128,20 @@ class ResultView:
         for p, q in zip(points, points[1:]):
             pygame.draw.line(image, conf.correctColor, p,
                              q, 3)  # уровень игры на старте
+        points2 = []
+        for x in xArr:
+            x += 1
+            result = (xPos(axisXMax*x/len(xArr)), yPos(0))
+            points2.append(result)
+        for p, q in zip(points, points2):
+            pygame.draw.line(image, conf.errorColor, p, q, 3)
+        points3 = []
+        for x, percent in zip(xArr, movesPercent):
+            x += 1
+            result = (xPos(axisXMax*x/len(xArr)), yPos(percent))
+            points3.append(result)
+        for p, q in zip(points2, points3):
+            pygame.draw.line(image, conf.regularColor, p, q, 5)
         points = []
         for x, y in zip(xArr, yArr):
             x += 1
