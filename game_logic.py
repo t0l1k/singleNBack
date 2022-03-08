@@ -36,8 +36,9 @@ class GameLogic(Drawable):
     def resetNewCellTimer(self):
         self.timeToNextCell = conf.timeToNextCell
         self.timeCellShow = conf.timeShowCell
-        if self.lives < conf.lives:
-            step = (conf.lives-self.lives)*conf.incDurrationStep
+        if self.lives < conf.thresholdFallbackSessions:
+            step = (conf.thresholdFallbackSessions -
+                    self.lives)*conf.incDurrationStep
             self.timeToNextCell += step
             self.timeCellShow += step
         self.delayBeforeShow = ((self.timeToNextCell-self.timeCellShow)/2)

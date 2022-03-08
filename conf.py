@@ -1,16 +1,15 @@
-beginLevel = 1  # начальный уровень, также в начале дня начальный уровень
-manualMode = False  # играть только на одном уровне установленном в beginLevel
-
-# игр для перехода на следующий уровень в режиме на ручнике, если 0 без перехода
-toNextLevelGamesCount = 0
-lives = 3  # число попыток
+defaultLevel = 1  # начальный уровень, также в начале дня начальный уровень
+manual = False  # играть только на одном уровне установленном в beginLevel
+# через сколько игр с результатом 100% для перехода на следующий уровень в режиме на ручнике, если 0 без перехода
+inManualAdvanceSessions = 0
 
 numTrials = 20  # сколько ходов за сессию вычисляется по формуле numTrial + numTiralsFactor * n ^ numTrialsExponent, 20 классика
 numTrialsFactor = 1
 numTrialsExponent = 2
 
-nextLevelPercent = 80  # процент перехода при успехе
-dropLevelPercent = 50  # процент перехода при поражении
+thresholdAdvance = 80  # процент перехода при успехе
+thresholdFallback = 50  # процент перехода при поражении
+thresholdFallbackSessions = 3  # число попыток
 resetLevelOnFirstWrong = False  # сбросить уровень при первой ошибке
 
 timeToNextCell = 3000  # длительность до новой иконки

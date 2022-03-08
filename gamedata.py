@@ -138,10 +138,10 @@ class GameData:
 class GamePreferences:
 
     def __init__(self) -> None:
-        self.manual = conf.manualMode
-        self.toNextLevelGamesCount = conf.toNextLevelGamesCount
-        self.nextLevelPercent = conf.nextLevelPercent
-        self.dropLevelPercent = conf.dropLevelPercent
+        self.manual = conf.manual
+        self.toNextLevelGamesCount = conf.inManualAdvanceSessions
+        self.nextLevelPercent = conf.thresholdAdvance
+        self.dropLevelPercent = conf.thresholdFallback
         self.resetLevelOnFirstWrong = conf.resetLevelOnFirstWrong
         self.fieldSize = conf.fieldSize
 

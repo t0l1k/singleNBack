@@ -29,7 +29,8 @@ class GameResult(Drawable):
         self.lblTimer.visible = True
         lives = today_games_data.getLivesFromGame(
             today_games_data.getGameCount())
-        self.pauseTime = (conf.lives + 1 - lives) * conf.timePause*1000
+        self.pauseTime = (conf.thresholdFallbackSessions +
+                          1 - lives) * conf.timePause*1000
         self.pauseTimer = pygame.time.get_ticks()
         self.lblName.bg = self.bgColor
         self.lblResults.bg = self.bgColor

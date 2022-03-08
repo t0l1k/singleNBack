@@ -28,7 +28,8 @@ class SceneGame(Scene):
         if today_games_data.getSize() > 0:  # загрузить последний уровень и попытки
             self.startNewGame(True)
         else:
-            self.gameStart(conf.beginLevel, conf.lives, False)
+            self.gameStart(conf.defaultLevel,
+                           conf.thresholdFallbackSessions, False)
 
     def resultsStart(self):
         self.gameResults = GameResult((0, 0), self.rect.size)
@@ -134,6 +135,6 @@ class SceneGame(Scene):
             pos, size = (0, 0), (ww, hh)
             self.gameResults.resize(pos, size)
             self.game.resize(pos, size)
-            if not conf.feedbackOnPreviousMove or conf.manualMode:
+            if not conf.feedbackOnPreviousMove or conf.manual:
                 pos, size = (0, 0), (window.rect.w, window.rect.h)
                 self.game.resize(pos, size)

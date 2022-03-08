@@ -172,19 +172,19 @@ class ResultView:
             if v.isDone:
                 s = "#{} Уровень:{} {}% Ходов:{} П:{} О:{}".format(
                     k, v.level, v.percent, v.moves, v.countCorrect, v.countWrong)
-            x = idx % self.rows
-            y = idx//self.rows
-            l = Label(s, (x*boxWidth, y*boxHeight),
-                      (boxWidth, boxHeight), fg=conf.cellFgColor)
-            if today_games_data.getPercentFromGame(idx) >= v.gamePreferences.nextLevelPercent:
-                l.bg = conf.regularColor
-            elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and today_games_data.useExtraTry(idx):
-                l.bg = conf.warningColor
-            elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and not today_games_data.useExtraTry(idx):
-                l.bg = conf.errorColor
-            else:
-                l.bg = conf.correctColor
-            l.draw(board)
+                x = idx % self.rows
+                y = idx//self.rows
+                l = Label(s, (x*boxWidth, y*boxHeight),
+                          (boxWidth, boxHeight), fg=conf.cellFgColor)
+                if today_games_data.getPercentFromGame(idx) >= v.gamePreferences.nextLevelPercent:
+                    l.bg = conf.regularColor
+                elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and today_games_data.useExtraTry(idx):
+                    l.bg = conf.warningColor
+                elif today_games_data.getPercentFromGame(idx) < v.gamePreferences.dropLevelPercent and not today_games_data.useExtraTry(idx):
+                    l.bg = conf.errorColor
+                else:
+                    l.bg = conf.correctColor
+                l.draw(board)
         self.rect.clamp_ip(board_rect)
         image = board.subsurface(self.rect)
         return image

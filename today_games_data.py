@@ -23,7 +23,7 @@ def countPlayTime():
     for _, v in get():
         if v.isDone:
             t3 = 0  # дополнительное время при дополнительной попытке
-            l = conf.lives - v.lives
+            l = conf.thresholdFallbackSessions - v.lives
             if l > 0:
                 t3 = conf.incDurrationStep*l
             t1 = conf.timeToNextCell+t3
@@ -161,17 +161,17 @@ def calculateNextLevel():
     extraTry = False
     if percent >= settings.nextLevelPercent and not settings.manual:
         level += 1
-        lives = conf.lives
+        lives = conf.thresholdFallbackSessions
     elif percent < settings.dropLevelPercent and not settings.manual:
         lives -= 1
         extraTry = True
         if lives <= 0:
             level -= 1
-            lives = conf.lives
+            lives = conf.thresholdFallbackSessions
             extraTry = False
         if level < 1:
             level = 1
-            lives = conf.lives
+            lives = conf.thresholdFallbackSessions
     elif settings.manual and isMatchesWins():
         level += 1
     log.debug("Вычислили новый уровень:%s жизней:%s дополнительные попытки:%s",
@@ -181,11 +181,11 @@ def calculateNextLevel():
 
 def isMatchesWins():
     nr = getGameCount()
-    if nr < conf.toNextLevelGamesCount-1 or conf.toNextLevelGamesCount == 0:
+    if nr < conf.inManualAdvanceSessions-1 or conf.inManualAdvanceSessions == 0:
         return False
     last_level = getLevelFromGame(nr)
     wins = 0
-    for i in range(conf.toNextLevelGamesCount):
+    for i in range(conf.inManualAdvanceSessions):
         percent = getPercentFromGame(nr)
         level = getLevelFromGame(nr)
         if percent < 100 or last_level != level:
