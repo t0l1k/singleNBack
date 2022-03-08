@@ -4,7 +4,7 @@ import window
 from scene import Scene
 import today_games_data
 import logging
-from game_logic import GameLogic
+import game_logic
 from game_result import GameResult
 from label import Label
 from gen_arr import Arr
@@ -36,14 +36,14 @@ class SceneGame(Scene):
 
     def gameStart(self, level, lives, reset):
         if not reset:
-            arr = Arr(level, GameLogic.getTotalMoves(level)).get()
+            arr = Arr(level, game_logic.getTotalMoves(level)).get()
         else:
             arr = today_games_data.getLastGameArr()
             level = today_games_data.getLastGameLevel()
             lives = today_games_data.getLastGameLives()
             print(arr, level, lives)
-        self.game = GameLogic((0, 0), self.rect.size,
-                              count=today_games_data.getGameCount(), level=level, lives=lives, arr=arr)
+        self.game = game_logic.GameLogic((0, 0), self.rect.size,
+                                         count=today_games_data.getGameCount(), level=level, lives=lives, arr=arr)
         self.game.start()
 
     def startNewGame(self, reset):
